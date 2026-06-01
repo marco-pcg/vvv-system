@@ -1,0 +1,35 @@
+services:
+  db:
+    container_name: vvv_postgres
+    image: postgres:16-alpine
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - vvv_net
+      
+  adminer:
+    container_name: vvv_adminer
+    image: adminer
+    ports:
+      - "8080:8080"
+    networks:
+      - vvv_net
+    depends_on:
+      db:
+        condition: service_healthy
+
+networks:
+  vvv_net:
+    driver: bridge
+
+volumes:
+  postgres_data:
