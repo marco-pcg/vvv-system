@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "pagamento_credito")
-@PrimaryKeyJoinColumn(name = "id_pagamento")
+@PrimaryKeyJoinColumn(name = "id")
 public class PagamentoCredito extends Pagamento {
 
     @Column(nullable = false)
