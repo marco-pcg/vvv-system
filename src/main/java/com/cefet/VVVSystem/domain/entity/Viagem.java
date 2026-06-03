@@ -1,11 +1,13 @@
 package com.cefet.VVVSystem.domain.entity;
 
+import com.cefet.VVVSystem.domain.enums.StatusViagem;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -35,9 +37,23 @@ public class Viagem {
     @Column(nullable = false)
     private LocalDateTime chegada;
 
-    @Column(nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private StatusViagem status;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal preco;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Viagem viagem = (Viagem) o;
+        return id != null && Objects.equals(id, viagem.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

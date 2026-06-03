@@ -10,6 +10,6 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "pagamento_debito")
-@PrimaryKeyJoinColumn(name = "id_pagamento")
+@PrimaryKeyJoinColumn(name = "id")
 public class PagamentoDebito extends Pagamento {
 }

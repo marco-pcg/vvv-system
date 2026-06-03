@@ -11,32 +11,32 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "transportadora")
-public class Transportadora {
+@Table(name = "permission")
+public class Permission {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String nome;
+    @Column(nullable = false, unique = true, length = 100)
+    private String name;
 
-    @Column(nullable = false, unique = true, length = 14)
-    private String cnpj;
+    @Column(length = 255)
+    private String description;
 
-    @OneToMany(mappedBy = "transportadora")
-    private Set<Modal> modais = new HashSet<>();
+    @ManyToMany(mappedBy = "permissions")
+    private Set<Role> roles = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Transportadora that = (Transportadora) o;
-        return cnpj != null && Objects.equals(cnpj, that.cnpj);
+        Permission that = (Permission) o;
+        return name != null && Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(cnpj);
+        return Objects.hash(name);
     }
 }

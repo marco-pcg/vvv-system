@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "pagamento_pix")
-@PrimaryKeyJoinColumn(name = "id_pagamento")
+@PrimaryKeyJoinColumn(name = "id")
 public class PagamentoPix extends Pagamento {
 
     @Column(name = "chave_pix", nullable = false, length = 60)

@@ -4,34 +4,36 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "transportadora")
-public class Transportadora {
+@Table(name = "ponto_de_venda")
+public class PontoDeVenda {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String nome;
-
     @Column(nullable = false, unique = true, length = 14)
     private String cnpj;
 
-    @OneToMany(mappedBy = "transportadora")
-    private Set<Modal> modais = new HashSet<>();
+    @Column(nullable = false)
+    private String endereco;
+
+    /**
+     * RN18: Cada PDV possui exatamente um gerente responsável.
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "gerente_id", nullable = false)
+    private Funcionario gerente;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Transportadora that = (Transportadora) o;
+        PontoDeVenda that = (PontoDeVenda) o;
         return cnpj != null && Objects.equals(cnpj, that.cnpj);
     }
 

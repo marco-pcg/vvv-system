@@ -10,8 +10,8 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
-@Table(name = "passageiro")
-public class Passageiro {
+@Table(name = "funcionario")
+public class Funcionario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,17 +29,24 @@ public class Passageiro {
     @Column(name = "data_nascimento")
     private LocalDate dataNascimento;
 
+    @Column(nullable = false, unique = true, length = 20)
+    private String matricula;
+
     @Column(nullable = false, unique = true)
     private String email;
 
     @Column(length = 11)
     private String telefone;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", unique = true)
+    private User user;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Passageiro that = (Passageiro) o;
+        Funcionario that = (Funcionario) o;
         return cpf != null && Objects.equals(cpf, that.cpf);
     }
 
