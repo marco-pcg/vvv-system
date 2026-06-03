@@ -1,7 +1,7 @@
 services:
   db:
     container_name: vvv_postgres
-    image: postgres:16-alpine
+    image: postgres:16
     env_file:
       - .env
     ports:

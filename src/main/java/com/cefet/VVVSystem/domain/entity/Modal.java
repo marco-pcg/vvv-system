@@ -1,4 +1,4 @@
-﻿package com.cefet.VVVSystem.domain.entity;
+package com.cefet.VVVSystem.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
