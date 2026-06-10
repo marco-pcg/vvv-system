@@ -2,6 +2,11 @@ docker compose down
 
 docker compose up -d --build
 
-mvn compile
+./mvnw dependency:purge-local-repository clean test-compile
 
-mvn spring-boot:run
+./mvnw compile
+
+./mvnw spring-boot:run
+
+./mvnw clean test
+    
