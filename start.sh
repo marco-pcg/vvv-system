@@ -9,4 +9,3 @@ docker compose up -d --build
 ./mvnw spring-boot:run
 
 ./mvnw clean test
-    
