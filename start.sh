@@ -2,6 +2,6 @@ docker compose down
 
 docker compose up -d --build
 
-mvn compile
+./mvnw compile
 
-mvn spring-boot:run
+./mvnw spring-boot:run
