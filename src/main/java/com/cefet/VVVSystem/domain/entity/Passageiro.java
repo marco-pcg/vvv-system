@@ -35,6 +35,9 @@ public class Passageiro {
     @Column(length = 11)
     private String telefone;
 
+    @Column(name = "possui_acompanhante", nullable = false)
+    private Boolean possuiAcompanhante = false;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
