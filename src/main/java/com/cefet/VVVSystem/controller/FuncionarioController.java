@@ -2,10 +2,10 @@ package com.cefet.VVVSystem.controller;
 
 import com.cefet.VVVSystem.dto.FuncionarioRequestDTO;
 import com.cefet.VVVSystem.dto.FuncionarioResponseDTO;
+import com.cefet.VVVSystem.response.ApiResponse;
 import com.cefet.VVVSystem.service.FuncionarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,28 +19,28 @@ public class FuncionarioController {
     private FuncionarioService funcionarioService;
 
     @PostMapping
-    public ResponseEntity<FuncionarioResponseDTO> criar(@RequestBody @Valid FuncionarioRequestDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(funcionarioService.criar(dto));
+    public ResponseEntity<ApiResponse<FuncionarioResponseDTO>> criar(@RequestBody @Valid FuncionarioRequestDTO dto) {
+        return ApiResponse.created("Funcionário criado com sucesso", funcionarioService.criar(dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<FuncionarioResponseDTO>> listarTodos() {
-        return ResponseEntity.ok(funcionarioService.listarTodos());
+    public ResponseEntity<ApiResponse<List<FuncionarioResponseDTO>>> listarTodos() {
+        return ApiResponse.success("Funcionários listados com sucesso", funcionarioService.listarTodos());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FuncionarioResponseDTO> buscarPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(funcionarioService.buscarPorId(id));
+    public ResponseEntity<ApiResponse<FuncionarioResponseDTO>> buscarPorId(@PathVariable Long id) {
+        return ApiResponse.success("Funcionário encontrado com sucesso", funcionarioService.buscarPorId(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<FuncionarioResponseDTO> atualizar(@PathVariable Long id, @RequestBody @Valid FuncionarioRequestDTO dto) {
-        return ResponseEntity.ok(funcionarioService.atualizar(id, dto));
+    public ResponseEntity<ApiResponse<FuncionarioResponseDTO>> atualizar(@PathVariable Long id, @RequestBody @Valid FuncionarioRequestDTO dto) {
+        return ApiResponse.success("Funcionário atualizado com sucesso", funcionarioService.atualizar(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> excluir(@PathVariable Long id) {
         funcionarioService.excluir(id);
-        return ResponseEntity.noContent().build();
+        return ApiResponse.success("Funcionário excluído com sucesso", null);
     }
 }

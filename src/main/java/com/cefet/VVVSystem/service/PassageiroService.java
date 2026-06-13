@@ -4,6 +4,7 @@ import com.cefet.VVVSystem.domain.entity.Passageiro;
 import com.cefet.VVVSystem.domain.repository.PassageiroRepository;
 import com.cefet.VVVSystem.dto.PassageiroRequestDTO;
 import com.cefet.VVVSystem.dto.PassageiroResponseDTO;
+import com.cefet.VVVSystem.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,13 +39,13 @@ public class PassageiroService {
 
     public PassageiroResponseDTO buscarPorId(Long id) {
         Passageiro passageiro = passageiroRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Passageiro não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Passageiro", "id", id));
         return new PassageiroResponseDTO(passageiro);
     }
 
     public PassageiroResponseDTO atualizar(Long id, PassageiroRequestDTO dto) {
         Passageiro passageiro = passageiroRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Passageiro não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Passageiro", "id", id));
         
         passageiro.setCpf(dto.cpf());
         passageiro.setNome(dto.nome());
@@ -60,7 +61,7 @@ public class PassageiroService {
 
     public void excluir(Long id) {
         Passageiro passageiro = passageiroRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Passageiro não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Passageiro", "id", id));
         passageiroRepository.delete(passageiro);
     }
 }
