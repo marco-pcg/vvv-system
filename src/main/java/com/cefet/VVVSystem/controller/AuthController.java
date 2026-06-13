@@ -2,6 +2,7 @@ package com.cefet.VVVSystem.controller;
 
 import com.cefet.VVVSystem.dto.LoginRequestDTO;
 import com.cefet.VVVSystem.dto.LoginResponseDTO;
+import com.cefet.VVVSystem.response.ApiResponse;
 import com.cefet.VVVSystem.security.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid LoginRequestDTO data) {
+    public ResponseEntity<ApiResponse<LoginResponseDTO>> login(@RequestBody @Valid LoginRequestDTO data) {
         // Encapsula as credenciais recebidas no formato do Spring Security
         var tokenDeAutenticacao = new UsernamePasswordAuthenticationToken(data.username(), data.password());
         
@@ -36,6 +37,6 @@ public class AuthController {
         // Se passar pela linha acima sem lançar erro, o usuário está autenticado. Geramos o token:
         String token = tokenService.gerarToken(auth.getName());
         
-        return ResponseEntity.ok(new LoginResponseDTO(token));
+        return ApiResponse.success("Login realizado com sucesso", new LoginResponseDTO(token));
     }
 }
