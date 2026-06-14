@@ -1,5 +1,6 @@
 package com.cefet.VVVSystem.controller;
 
+import com.cefet.VVVSystem.dto.AtribuirGerenteRequestDTO;
 import com.cefet.VVVSystem.dto.PontoDeVendaRequestDTO;
 import com.cefet.VVVSystem.dto.PontoDeVendaResponseDTO;
 import com.cefet.VVVSystem.response.ApiResponse;
@@ -42,5 +43,12 @@ public class PontoDeVendaController {
     public ResponseEntity<ApiResponse<Void>> excluir(@PathVariable Long id) {
         pontoDeVendaService.excluir(id);
         return ApiResponse.success("Ponto de Venda excluído com sucesso", null);
+    }
+
+    @PatchMapping("/{id}/gerente")
+    public ResponseEntity<ApiResponse<PontoDeVendaResponseDTO>> atribuirGerente(
+            @PathVariable Long id, 
+            @RequestBody @Valid AtribuirGerenteRequestDTO dto) {
+        return ApiResponse.success("Gerente atribuído com sucesso", pontoDeVendaService.atribuirGerente(id, dto.gerenteId()));
     }
 }

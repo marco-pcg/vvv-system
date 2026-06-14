@@ -46,8 +46,10 @@ public class Reserva {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Reserva reserva = (Reserva) o;
         return codigo != null && Objects.equals(codigo, reserva.codigo);
     }
