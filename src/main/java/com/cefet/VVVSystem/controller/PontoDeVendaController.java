@@ -10,10 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 
 @RestController
 @RequestMapping("/pontos-de-venda")
+@Tag(name = "Pontos de Venda", description = "Endpoints para gerenciamento de Pontos de Venda")
 public class PontoDeVendaController {
 
     @Autowired
@@ -45,6 +48,7 @@ public class PontoDeVendaController {
         return ApiResponse.success("Ponto de Venda excluído com sucesso", null);
     }
 
+    @Operation(summary = "Atribuir um Gerente a um PDV", description = "Define o funcionário que será o gerente responsável pelo Ponto de Venda.")
     @PatchMapping("/{id}/gerente")
     public ResponseEntity<ApiResponse<PontoDeVendaResponseDTO>> atribuirGerente(
             @PathVariable Long id, 

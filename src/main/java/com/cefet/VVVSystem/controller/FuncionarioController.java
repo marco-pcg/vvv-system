@@ -1,5 +1,6 @@
 package com.cefet.VVVSystem.controller;
 
+import com.cefet.VVVSystem.dto.AlocarFuncionarioRequestDTO;
 import com.cefet.VVVSystem.dto.FuncionarioRequestDTO;
 import com.cefet.VVVSystem.dto.FuncionarioResponseDTO;
 import com.cefet.VVVSystem.response.ApiResponse;
@@ -9,10 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 
 @RestController
 @RequestMapping("/funcionarios")
+@Tag(name = "Funcionários", description = "Endpoints para gerenciamento de funcionários")
 public class FuncionarioController {
 
     @Autowired
@@ -42,5 +46,13 @@ public class FuncionarioController {
     public ResponseEntity<ApiResponse<Void>> excluir(@PathVariable Long id) {
         funcionarioService.excluir(id);
         return ApiResponse.success("Funcionário excluído com sucesso", null);
+    }
+
+    @Operation(summary = "Alocar funcionário em um Ponto de Venda", description = "Vincula um funcionário a um PDV, respeitando o limite máximo de 2 PDVs por funcionário.")
+    @PostMapping("/{id}/pontos-de-venda")
+    public ResponseEntity<ApiResponse<FuncionarioResponseDTO>> alocarPontoDeVenda(
+            @PathVariable Long id, 
+            @RequestBody @Valid AlocarFuncionarioRequestDTO dto) {
+        return ApiResponse.success("Funcionário alocado ao Ponto de Venda com sucesso", funcionarioService.alocarPontoDeVenda(id, dto.pdvId()));
     }
 }

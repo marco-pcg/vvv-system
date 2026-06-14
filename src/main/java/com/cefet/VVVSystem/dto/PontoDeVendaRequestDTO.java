@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.br.CNPJ;
 public record PontoDeVendaRequestDTO(
         @NotBlank(message = "O CNPJ é obrigatório")
         @CNPJ(message = "CNPJ inválido")
-        @Schema(example = "12345678000199")
+        @Schema(example = "06990590000123")
         String cnpj,
 
         @NotBlank(message = "O endereço é obrigatório")

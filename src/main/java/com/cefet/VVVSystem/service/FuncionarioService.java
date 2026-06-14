@@ -2,6 +2,8 @@ package com.cefet.VVVSystem.service;
 
 import com.cefet.VVVSystem.domain.entity.Funcionario;
 import com.cefet.VVVSystem.domain.repository.FuncionarioRepository;
+import com.cefet.VVVSystem.domain.entity.PontoDeVenda;
+import com.cefet.VVVSystem.domain.repository.PontoDeVendaRepository;
 import com.cefet.VVVSystem.dto.FuncionarioRequestDTO;
 import com.cefet.VVVSystem.dto.FuncionarioResponseDTO;
 import com.cefet.VVVSystem.exception.ConflictException;
@@ -12,11 +14,17 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
+@Transactional
 public class FuncionarioService {
 
     @Autowired
     private FuncionarioRepository funcionarioRepository;
+
+    @Autowired
+    private PontoDeVendaRepository pontoDeVendaRepository;
 
     public FuncionarioResponseDTO criar(FuncionarioRequestDTO dto) {
         // Validação básica da matrícula já feita pelo DTO (@NotBlank),
@@ -76,5 +84,18 @@ public class FuncionarioService {
         Funcionario funcionario = funcionarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Funcionário", "id", id));
         funcionarioRepository.delete(funcionario);
+    }
+
+    public FuncionarioResponseDTO alocarPontoDeVenda(Long idFuncionario, Long idPdv) {
+        Funcionario funcionario = funcionarioRepository.findById(idFuncionario)
+                .orElseThrow(() -> new ResourceNotFoundException("Funcionário", "id", idFuncionario));
+
+        PontoDeVenda pdv = pontoDeVendaRepository.findById(idPdv)
+                .orElseThrow(() -> new ResourceNotFoundException("Ponto de Venda", "id", idPdv));
+
+        funcionario.autorizarEmPontoDeVenda(pdv);
+
+        Funcionario updated = funcionarioRepository.save(funcionario);
+        return new FuncionarioResponseDTO(updated);
     }
 }
