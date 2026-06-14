@@ -30,11 +30,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Desabilita proteção CSRF (padrão para APIs REST com JWT)
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // API sem estado (Stateless)
+                .csrf(csrf -> csrf.disable()) // Desabilita proteção CSRF (padrão para APIs REST com JWT)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // API
+                                                                                                               // sem
+                                                                                                               // estado
+                                                                                                               // (Stateless)
 
-        boolean ignorePermission = "true".equalsIgnoreCase(env.getProperty("IGNORE_PERMISSION")) || 
-                                   "true".equalsIgnoreCase(env.getProperty("env.IGNORE_PERMISSION"));
+        boolean ignorePermission = "true".equalsIgnoreCase(env.getProperty("IGNORE_PERMISSION")) ||
+                "true".equalsIgnoreCase(env.getProperty("env.IGNORE_PERMISSION"));
 
         if (!ignorePermission) {
             try {
@@ -42,7 +45,8 @@ public class SecurityConfig {
                 if (java.nio.file.Files.exists(envPath)) {
                     java.util.List<String> lines = java.nio.file.Files.readAllLines(envPath);
                     for (String line : lines) {
-                        if (line.trim().startsWith("IGNORE_PERMISSION=true") || line.trim().startsWith("IGNORE_PERMISSION = true")) {
+                        if (line.trim().startsWith("IGNORE_PERMISSION=true")
+                                || line.trim().startsWith("IGNORE_PERMISSION = true")) {
                             ignorePermission = true;
                             break;
                         }
@@ -55,16 +59,21 @@ public class SecurityConfig {
 
         if (ignorePermission) {
             http.authorizeHttpRequests(authorize -> authorize
-                .anyRequest().permitAll() // IGNORE_PERMISSION=true → todas as rotas liberadas
-            );
+                    .anyRequest().permitAll());
         } else {
             http.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers(HttpMethod.POST, "/auth/login").permitAll() // Endpoint de login liberado publicamente
-                .requestMatchers(HttpMethod.POST, "/auth/register").permitAll() // Endpoint de cadastro liberado publicamente
-                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll() // Documentação do Swagger liberada
-                .anyRequest().authenticated() // Qualquer outra rota exige autenticação
+                    .requestMatchers(HttpMethod.POST, "/auth/login").permitAll() // Endpoint de login liberado
+                                                                                 // publicamente
+                    .requestMatchers(HttpMethod.POST, "/auth/register").permitAll() // Endpoint de cadastro liberado
+                                                                                    // publicamente
+                    .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll() // Documentação
+                                                                                                          // do Swagger
+                                                                                                          // liberada
+                    .anyRequest().authenticated() // Qualquer outra rota exige autenticação
             )
-            .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class); // Injeta nosso filtro JWT antes do filtro padrão do Spring
+                    .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class); // Injeta nosso filtro
+                                                                                                  // JWT antes do filtro
+                                                                                                  // padrão do Spring
         }
 
         return http.build();
@@ -77,6 +86,6 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // Define o algoritmo BCrypt para hash seguro de senhas
+        return new BCryptPasswordEncoder(); //
     }
 }
