@@ -103,4 +103,42 @@ class PontoDeVendaServiceTest {
         verify(funcionarioRepository, times(1)).findById(requestDTO.gerenteId());
         verify(pontoDeVendaRepository, never()).save(any());
     }
+
+    @Test
+    @DisplayName("Deve atribuir um novo gerente ao PDV com sucesso")
+    void atribuirGerenteComSucesso() {
+        // Arrange
+        Funcionario novoGerente = new Funcionario();
+        novoGerente.setId(2L);
+        novoGerente.setNome("Novo Gerente");
+
+        when(pontoDeVendaRepository.findById(pontoDeVenda.getId())).thenReturn(Optional.of(pontoDeVenda));
+        when(funcionarioRepository.findById(novoGerente.getId())).thenReturn(Optional.of(novoGerente));
+        when(pontoDeVendaRepository.save(any(PontoDeVenda.class))).thenAnswer(i -> i.getArgument(0));
+
+        // Act
+        PontoDeVendaResponseDTO response = pontoDeVendaService.atribuirGerente(pontoDeVenda.getId(), novoGerente.getId());
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(novoGerente.getId(), response.gerenteId());
+
+        verify(pontoDeVendaRepository, times(1)).findById(pontoDeVenda.getId());
+        verify(funcionarioRepository, times(1)).findById(novoGerente.getId());
+        verify(pontoDeVendaRepository, times(1)).save(any(PontoDeVenda.class));
+    }
+
+    @Test
+    @DisplayName("Deve lançar ResourceNotFoundException ao tentar atribuir gerente a um PDV inexistente")
+    void atribuirGerentePdvNaoEncontrado() {
+        // Arrange
+        when(pontoDeVendaRepository.findById(999L)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () -> pontoDeVendaService.atribuirGerente(999L, 1L));
+
+        verify(pontoDeVendaRepository, times(1)).findById(999L);
+        verify(funcionarioRepository, never()).findById(any());
+        verify(pontoDeVendaRepository, never()).save(any());
+    }
 }

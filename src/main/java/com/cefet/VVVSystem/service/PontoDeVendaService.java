@@ -77,4 +77,17 @@ public class PontoDeVendaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Ponto de Venda", "id", id));
         pontoDeVendaRepository.delete(pdv);
     }
+
+    public PontoDeVendaResponseDTO atribuirGerente(Long id, Long gerenteId) {
+        PontoDeVenda pdv = pontoDeVendaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Ponto de Venda", "id", id));
+
+        Funcionario gerente = funcionarioRepository.findById(gerenteId)
+                .orElseThrow(() -> new ResourceNotFoundException("Gerente (Funcionario)", "id", gerenteId));
+
+        pdv.setGerente(gerente);
+
+        PontoDeVenda updated = pontoDeVendaRepository.save(pdv);
+        return new PontoDeVendaResponseDTO(updated);
+    }
 }
