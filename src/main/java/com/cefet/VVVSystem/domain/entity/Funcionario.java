@@ -1,11 +1,21 @@
 package com.cefet.VVVSystem.domain.entity;
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.time.LocalDate;
 import java.util.Objects;
+
+import com.cefet.VVVSystem.domain.enums.StatusOperacional;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -53,5 +63,13 @@ public class Funcionario {
     @Override
     public int hashCode() {
         return Objects.hash(cpf);
+    }
+
+    public void colocarModalEmManutencao(Modal modal) {
+        if (modal == null) {
+            throw new IllegalArgumentException("Modal cannot be null");
+        }
+
+        modal.setStatusOperacional(StatusOperacional.EM_MANUTENCAO);
     }
 }
