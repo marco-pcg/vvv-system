@@ -46,4 +46,50 @@ class ProcessadorPagamentoTest {
         assertEquals(StatusReserva.CONFIRMADA, reserva.getStatus(), "Reservation should be CONFIRMADA.");
         assertNotNull(reserva.getPagamento(), "Payment record should be successfully bound to the reservation.");
     }
+
+    @Test
+    @DisplayName("Should automatically select Credito strategy and not apply interest for up to 4 installments")
+    void testProcessamentoComSucessoCreditoAte4Parcelas() {
+        // Arrange
+        Reserva reserva = new Reserva();
+        reserva.setId(10L);
+        reserva.setStatus(StatusReserva.PENDENTE);
+        reserva.setValorTotal(new java.math.BigDecimal("100.00"));
+
+        PagamentoCredito credito = new PagamentoCredito();
+        credito.setNumeroCartao(1234);
+        credito.setParcelas(4);
+        credito.setReserva(reserva);
+
+        // Act
+        processador.processarERegistrarPagamento(reserva, credito);
+
+        // Assert
+        assertEquals(StatusPagamento.APROVADO, credito.getStatus());
+        assertEquals(StatusReserva.CONFIRMADA, reserva.getStatus());
+        assertEquals(new java.math.BigDecimal("100.00"), reserva.getValorTotal(), "Value should not have interest applied.");
+    }
+
+    @Test
+    @DisplayName("Should automatically select Credito strategy and apply 5% interest for more than 4 installments")
+    void testProcessamentoComSucessoCreditoAcimaDe4Parcelas() {
+        // Arrange
+        Reserva reserva = new Reserva();
+        reserva.setId(11L);
+        reserva.setStatus(StatusReserva.PENDENTE);
+        reserva.setValorTotal(new java.math.BigDecimal("100.00"));
+
+        PagamentoCredito credito = new PagamentoCredito();
+        credito.setNumeroCartao(5678);
+        credito.setParcelas(5);
+        credito.setReserva(reserva);
+
+        // Act
+        processador.processarERegistrarPagamento(reserva, credito);
+
+        // Assert
+        assertEquals(StatusPagamento.APROVADO, credito.getStatus());
+        assertEquals(StatusReserva.CONFIRMADA, reserva.getStatus());
+        assertEquals(new java.math.BigDecimal("105.00"), reserva.getValorTotal(), "Value should have 5% interest applied.");
+    }
 }

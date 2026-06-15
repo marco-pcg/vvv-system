@@ -6,16 +6,15 @@ import com.cefet.VVVSystem.domain.enums.TipoPagamento;
 
 public class PagamentoDebitoStrategy implements PagamentoStrategy {
     
-   @Override
+    @Override
     public boolean processar(Pagamento pagamento) {
-        PagamentoCredito credito = (PagamentoCredito) pagamento;
-        // Implement specific credit card validation/processing logic here
-        System.out.println("Processing Credit Card ending in: " + credito.getNumeroCartao());
+        com.cefet.VVVSystem.domain.entity.PagamentoDebito debito = (com.cefet.VVVSystem.domain.entity.PagamentoDebito) pagamento;
+        System.out.println("Processing Debit Card ending in: " + debito.getNumeroCartao());
         return true;
     }
 
     @Override
     public boolean seAplicaA(TipoPagamento tipoPagamento) {
-        return "CREDITO".equalsIgnoreCase(tipoPagamento.toString());
+        return TipoPagamento.DEBITO.equals(tipoPagamento);
     }
 }
