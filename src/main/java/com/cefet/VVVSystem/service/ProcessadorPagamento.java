@@ -39,14 +39,14 @@ public class ProcessadorPagamento {
         if (sucesso) {
             // 3. Registrar Pagamento (Link transaction meta to entity)
             pagamento.setStatus(StatusPagamento.APROVADO);
-            reserva.setPagamento(pagamento); // Assuming Reserva maps to a Pagamento instance
+            pagamento.setReserva(reserva); // FK lives on Pagamento side (pagamento.id_reserva)
 
             // 4. Atualizar status da reserva
             reserva.setStatus(StatusReserva.CONFIRMADA); // Updates your reservation state machine
             System.out.println("Reservation " + reserva.getId() + " successfully confirmed via Strategy!");
         } else {
             pagamento.setStatus(StatusPagamento.RECUSADO);
-            reserva.setStatus(StatusReserva.CONFIRMADA);
+            reserva.setStatus(StatusReserva.PENDENTE);
         }
     }
 }

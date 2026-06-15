@@ -10,15 +10,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class ViagemMapper {
 
-    public Viagem toEntity(ViagemRequestDTO dto, Modal modal, Cidade cidadeOrigem, Cidade cidadeDestino) {
+    public Viagem toEntity(ViagemRequestDTO dto, java.util.Set<Modal> modais, Cidade cidadeOrigem, Cidade cidadeDestino, java.util.Set<Cidade> escalas) {
         if (dto == null) {
             return null;
         }
 
         Viagem viagem = new Viagem();
-        viagem.setModal(modal);
+        viagem.setModais(modais);
         viagem.setCidadeOrigem(cidadeOrigem);
         viagem.setCidadeDestino(cidadeDestino);
+        if (escalas != null) {
+            viagem.setEscalas(escalas);
+        }
         viagem.setPartida(dto.getPartida());
         viagem.setChegada(dto.getChegada());
         viagem.setPreco(dto.getPreco());
@@ -33,8 +36,11 @@ public class ViagemMapper {
 
         ViagemResponseDTO dto = new ViagemResponseDTO();
         dto.setId(viagem.getId());
-        if (viagem.getModal() != null) {
-            dto.setIdModal(viagem.getModal().getId());
+        if (viagem.getModais() != null) {
+            dto.setIdsModais(viagem.getModais().stream().map(Modal::getId).collect(java.util.stream.Collectors.toList()));
+        }
+        if (viagem.getEscalas() != null) {
+            dto.setIdsEscalas(viagem.getEscalas().stream().map(Cidade::getId).collect(java.util.stream.Collectors.toList()));
         }
         if (viagem.getCidadeOrigem() != null) {
             dto.setIdCidadeOrigem(viagem.getCidadeOrigem().getId());

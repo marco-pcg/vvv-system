@@ -40,6 +40,7 @@ CREATE TABLE passageiro (
     data_nascimento DATE,
     email           VARCHAR(255) NOT NULL,
     telefone        VARCHAR(11),
+    possui_acompanhante BOOLEAN NOT NULL DEFAULT FALSE,
 
     CONSTRAINT uk_passageiro_cpf   UNIQUE (cpf),
     CONSTRAINT uk_passageiro_email UNIQUE (email)
@@ -168,7 +169,6 @@ CREATE TABLE funcionario (
 
 CREATE TABLE viagem (
     id              BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    id_modal        BIGINT       NOT NULL,
     cidade_origem   BIGINT       NOT NULL,
     cidade_destino  BIGINT       NOT NULL,
     partida         TIMESTAMP    NOT NULL,
@@ -176,12 +176,35 @@ CREATE TABLE viagem (
     status          VARCHAR(20)  NOT NULL,
     preco           NUMERIC(10,2) NOT NULL,
 
-    CONSTRAINT fk_viagem_modal          FOREIGN KEY (id_modal)       REFERENCES modal (id),
     CONSTRAINT fk_viagem_cidade_origem  FOREIGN KEY (cidade_origem)  REFERENCES cidade (id),
     CONSTRAINT fk_viagem_cidade_destino FOREIGN KEY (cidade_destino) REFERENCES cidade (id),
     CONSTRAINT ck_viagem_preco          CHECK (preco >= 0),
     CONSTRAINT ck_viagem_datas          CHECK (chegada > partida),
     CONSTRAINT ck_viagem_status         CHECK (status IN ('AGENDADA','EM_ANDAMENTO','CONCLUIDA','CANCELADA'))
+);
+
+-- -------------------------------------------------------
+
+CREATE TABLE viagem_modal (
+    viagem_id BIGINT NOT NULL,
+    modal_id BIGINT NOT NULL,
+
+    PRIMARY KEY (viagem_id, modal_id),
+
+    CONSTRAINT fk_vm_viagem FOREIGN KEY (viagem_id) REFERENCES viagem (id),
+    CONSTRAINT fk_vm_modal FOREIGN KEY (modal_id) REFERENCES modal (id)
+);
+
+-- -------------------------------------------------------
+
+CREATE TABLE viagem_escala (
+    viagem_id BIGINT NOT NULL,
+    cidade_id BIGINT NOT NULL,
+
+    PRIMARY KEY (viagem_id, cidade_id),
+
+    CONSTRAINT fk_ve_viagem FOREIGN KEY (viagem_id) REFERENCES viagem (id),
+    CONSTRAINT fk_ve_cidade FOREIGN KEY (cidade_id) REFERENCES cidade (id)
 );
 
 -- -------------------------------------------------------
@@ -260,8 +283,9 @@ CREATE TABLE pagamento (
 -- -------------------------------------------------------
 
 CREATE TABLE pagamento_credito (
-    id       BIGINT  NOT NULL PRIMARY KEY,
-    parcelas INTEGER NOT NULL,
+    id            BIGINT  NOT NULL PRIMARY KEY,
+    parcelas      INTEGER NOT NULL,
+    numero_cartao INTEGER NOT NULL,
 
     CONSTRAINT fk_pgto_credito          FOREIGN KEY (id) REFERENCES pagamento (id),
     CONSTRAINT ck_pgto_credito_parcelas CHECK (parcelas > 0)
@@ -270,7 +294,9 @@ CREATE TABLE pagamento_credito (
 -- -------------------------------------------------------
 
 CREATE TABLE pagamento_debito (
-    id BIGINT NOT NULL PRIMARY KEY,
+    id            BIGINT  NOT NULL PRIMARY KEY,
+    parcelas      INTEGER NOT NULL,
+    numero_cartao INTEGER NOT NULL,
 
     CONSTRAINT fk_pgto_debito FOREIGN KEY (id) REFERENCES pagamento (id)
 );
@@ -278,8 +304,9 @@ CREATE TABLE pagamento_debito (
 -- -------------------------------------------------------
 
 CREATE TABLE pagamento_pix (
-    id        BIGINT      NOT NULL PRIMARY KEY,
-    chave_pix VARCHAR(60) NOT NULL,
+    id        BIGINT        NOT NULL PRIMARY KEY,
+    chave_pix VARCHAR(60)   NOT NULL,
+    valor     DOUBLE PRECISION NOT NULL,
 
     CONSTRAINT fk_pgto_pix FOREIGN KEY (id) REFERENCES pagamento (id)
 );
@@ -294,7 +321,7 @@ CREATE TABLE pagamento_pix (
 
 -- FK indices (PostgreSQL NÃO cria índices automaticamente para FKs)
 CREATE INDEX idx_modal_transportadora   ON modal (id_transportadora);
-CREATE INDEX idx_viagem_modal           ON viagem (id_modal);
+-- Removed idx_viagem_modal since id_modal was extracted
 CREATE INDEX idx_viagem_cidade_origem   ON viagem (cidade_origem);
 CREATE INDEX idx_viagem_cidade_destino  ON viagem (cidade_destino);
 CREATE INDEX idx_reserva_viagem         ON reserva (id_viagem);

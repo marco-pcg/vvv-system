@@ -59,7 +59,10 @@ public class ReservaService {
 
         // 4. Controle de capacidade / Anti-overbooking (RF09/RI04)
         long reservasAtivas = reservaRepository.countByViagemIdAndStatusIn(viagem.getId(), STATUSES_ATIVOS);
-        int capacidade = viagem.getModal().getCapacidade();
+        int capacidade = viagem.getModais().stream()
+                .mapToInt(com.cefet.VVVSystem.domain.entity.Modal::getCapacidade)
+                .min()
+                .orElseThrow(() -> new BusinessException("A viagem não possui modais alocados."));
         if (reservasAtivas >= capacidade) {
             throw new BusinessException(
                     "Não há mais assentos disponíveis para esta viagem. Capacidade: "

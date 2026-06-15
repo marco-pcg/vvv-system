@@ -31,11 +31,22 @@ public class ViagemService {
 
     @Transactional
     public ViagemResponseDTO create(ViagemRequestDTO dto) {
-        Modal modal = modalRepository.findById(dto.getIdModal())
-                .orElseThrow(() -> new ResourceNotFoundException("Modal não encontrado com o ID: " + dto.getIdModal()));
-
-        if (modal.getStatusOperacional() != StatusOperacional.OPERACIONAL) {
-            throw new BusinessException("O Modal selecionado não está operacional.");
+        java.util.Set<Modal> modais = new java.util.HashSet<>(modalRepository.findAllById(dto.getIdsModais()));
+        if (modais.isEmpty() || modais.size() != dto.getIdsModais().size()) {
+            throw new ResourceNotFoundException("Um ou mais Modais não foram encontrados.");
+        }
+        for (Modal m : modais) {
+            if (m.getStatusOperacional() != StatusOperacional.OPERACIONAL) {
+                throw new BusinessException("O Modal " + m.getCodigo() + " não está operacional.");
+            }
+        }
+        
+        java.util.Set<Cidade> escalas = new java.util.HashSet<>();
+        if (dto.getIdsEscalas() != null && !dto.getIdsEscalas().isEmpty()) {
+            escalas.addAll(cidadeRepository.findAllById(dto.getIdsEscalas()));
+            if (escalas.size() != dto.getIdsEscalas().size()) {
+                throw new ResourceNotFoundException("Uma ou mais Cidades de escala não foram encontradas.");
+            }
         }
 
         Cidade cidadeOrigem = cidadeRepository.findById(dto.getIdCidadeOrigem())
@@ -52,7 +63,7 @@ public class ViagemService {
             throw new BusinessException("A data de partida deve ser anterior à data de chegada.");
         }
 
-        Viagem viagem = viagemMapper.toEntity(dto, modal, cidadeOrigem, cidadeDestino);
+        Viagem viagem = viagemMapper.toEntity(dto, modais, cidadeOrigem, cidadeDestino, escalas);
         viagem.setStatus(StatusViagem.AGENDADA);
 
         viagem = viagemRepository.save(viagem);
@@ -77,11 +88,22 @@ public class ViagemService {
     public ViagemResponseDTO update(Long id, ViagemRequestDTO dto) {
         Viagem viagem = getViagemById(id);
 
-        Modal modal = modalRepository.findById(dto.getIdModal())
-                .orElseThrow(() -> new ResourceNotFoundException("Modal não encontrado com o ID: " + dto.getIdModal()));
-
-        if (modal.getStatusOperacional() != StatusOperacional.OPERACIONAL) {
-            throw new BusinessException("O Modal selecionado não está operacional.");
+        java.util.Set<Modal> modais = new java.util.HashSet<>(modalRepository.findAllById(dto.getIdsModais()));
+        if (modais.isEmpty() || modais.size() != dto.getIdsModais().size()) {
+            throw new ResourceNotFoundException("Um ou mais Modais não foram encontrados.");
+        }
+        for (Modal m : modais) {
+            if (m.getStatusOperacional() != StatusOperacional.OPERACIONAL) {
+                throw new BusinessException("O Modal " + m.getCodigo() + " não está operacional.");
+            }
+        }
+        
+        java.util.Set<Cidade> escalas = new java.util.HashSet<>();
+        if (dto.getIdsEscalas() != null && !dto.getIdsEscalas().isEmpty()) {
+            escalas.addAll(cidadeRepository.findAllById(dto.getIdsEscalas()));
+            if (escalas.size() != dto.getIdsEscalas().size()) {
+                throw new ResourceNotFoundException("Uma ou mais Cidades de escala não foram encontradas.");
+            }
         }
 
         Cidade cidadeOrigem = cidadeRepository.findById(dto.getIdCidadeOrigem())
@@ -98,9 +120,10 @@ public class ViagemService {
             throw new BusinessException("A data de partida deve ser anterior à data de chegada.");
         }
 
-        viagem.setModal(modal);
+        viagem.setModais(modais);
         viagem.setCidadeOrigem(cidadeOrigem);
         viagem.setCidadeDestino(cidadeDestino);
+        viagem.setEscalas(escalas);
         viagem.setPartida(dto.getPartida());
         viagem.setChegada(dto.getChegada());
         viagem.setPreco(dto.getPreco());

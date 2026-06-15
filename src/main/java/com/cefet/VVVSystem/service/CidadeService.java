@@ -2,7 +2,8 @@ package com.cefet.VVVSystem.service;
 
 import com.cefet.VVVSystem.domain.entity.Cidade;
 import com.cefet.VVVSystem.domain.repository.CidadeRepository;
-import com.cefet.VVVSystem.dto.CidadeDTO;
+import com.cefet.VVVSystem.dto.CidadeRequestDTO;
+import com.cefet.VVVSystem.dto.CidadeResponseDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,21 +20,21 @@ public class CidadeService {
     }
 
     @Transactional(readOnly = true)
-    public List<CidadeDTO> findAll() {
+    public List<CidadeResponseDTO> findAll() {
         return cidadeRepository.findAll().stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public CidadeDTO findById(Long id) {
+    public CidadeResponseDTO findById(Long id) {
         Cidade cidade = cidadeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cidade não encontrada com ID: " + id));
         return toDTO(cidade);
     }
 
     @Transactional
-    public CidadeDTO create(CidadeDTO dto) {
+    public CidadeResponseDTO create(CidadeRequestDTO dto) {
         if (cidadeRepository.findByNomeAndUf(dto.nome(), dto.uf()).isPresent()) {
             throw new RuntimeException("Já existe uma cidade cadastrada com este nome e UF.");
         }
@@ -47,7 +48,7 @@ public class CidadeService {
     }
 
     @Transactional
-    public CidadeDTO update(Long id, CidadeDTO dto) {
+    public CidadeResponseDTO update(Long id, CidadeRequestDTO dto) {
         Cidade cidade = cidadeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cidade não encontrada com ID: " + id));
 
@@ -73,7 +74,7 @@ public class CidadeService {
         cidadeRepository.deleteById(id);
     }
 
-    private CidadeDTO toDTO(Cidade cidade) {
-        return new CidadeDTO(cidade.getId(), cidade.getNome(), cidade.getUf());
+    private CidadeResponseDTO toDTO(Cidade cidade) {
+        return new CidadeResponseDTO(cidade);
     }
 }

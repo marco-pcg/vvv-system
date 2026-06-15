@@ -1,6 +1,7 @@
 package com.cefet.VVVSystem.controller;
 
-import com.cefet.VVVSystem.dto.CidadeDTO;
+import com.cefet.VVVSystem.dto.CidadeRequestDTO;
+import com.cefet.VVVSystem.dto.CidadeResponseDTO;
 import com.cefet.VVVSystem.service.CidadeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,23 +20,23 @@ public class CidadeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CidadeDTO>> findAll() {
+    public ResponseEntity<List<CidadeResponseDTO>> findAll() {
         return ResponseEntity.ok(cidadeService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CidadeDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<CidadeResponseDTO> findById(@PathVariable Long id) {
         return ResponseEntity.ok(cidadeService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<CidadeDTO> create(@RequestBody CidadeDTO dto) {
-        CidadeDTO created = cidadeService.create(dto);
+    public ResponseEntity<CidadeResponseDTO> create(@RequestBody CidadeRequestDTO dto) {
+        CidadeResponseDTO created = cidadeService.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CidadeDTO> update(@PathVariable Long id, @RequestBody CidadeDTO dto) {
+    public ResponseEntity<CidadeResponseDTO> update(@PathVariable Long id, @RequestBody CidadeRequestDTO dto) {
         return ResponseEntity.ok(cidadeService.update(id, dto));
     }
 

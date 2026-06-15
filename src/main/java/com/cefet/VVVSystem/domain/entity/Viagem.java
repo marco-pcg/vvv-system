@@ -19,9 +19,21 @@ public class Viagem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_modal", nullable = false)
-    private Modal modal;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "viagem_modal",
+        joinColumns = @JoinColumn(name = "viagem_id"),
+        inverseJoinColumns = @JoinColumn(name = "modal_id")
+    )
+    private java.util.Set<Modal> modais = new java.util.HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "viagem_escala",
+        joinColumns = @JoinColumn(name = "viagem_id"),
+        inverseJoinColumns = @JoinColumn(name = "cidade_id")
+    )
+    private java.util.Set<Cidade> escalas = new java.util.HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cidade_origem", nullable = false)

@@ -53,7 +53,8 @@ class ViagemServiceTest {
     @BeforeEach
     void setUp() {
         requestDTO = new ViagemRequestDTO();
-        requestDTO.setIdModal(1L);
+        requestDTO.setIdsModais(java.util.List.of(1L));
+        requestDTO.setIdsEscalas(java.util.List.of());
         requestDTO.setIdCidadeOrigem(1L);
         requestDTO.setIdCidadeDestino(2L);
         requestDTO.setPartida(LocalDateTime.now().plusDays(1));
@@ -73,12 +74,12 @@ class ViagemServiceTest {
 
     @Test
     void createViagem_Success() {
-        when(modalRepository.findById(1L)).thenReturn(Optional.of(modal));
+        when(modalRepository.findAllById(any())).thenReturn(java.util.List.of(modal));
         when(cidadeRepository.findById(1L)).thenReturn(Optional.of(cidadeOrigem));
         when(cidadeRepository.findById(2L)).thenReturn(Optional.of(cidadeDestino));
 
         Viagem viagemEntity = new Viagem();
-        when(viagemMapper.toEntity(any(), any(), any(), any())).thenReturn(viagemEntity);
+        when(viagemMapper.toEntity(any(), any(), any(), any(), any())).thenReturn(viagemEntity);
         when(viagemRepository.save(any(Viagem.class))).thenReturn(viagemEntity);
 
         ViagemResponseDTO responseDTO = new ViagemResponseDTO();
@@ -95,7 +96,7 @@ class ViagemServiceTest {
     @Test
     void createViagem_ModalNotOperacional_ThrowsException() {
         modal.setStatusOperacional(StatusOperacional.INATIVO);
-        when(modalRepository.findById(1L)).thenReturn(Optional.of(modal));
+        when(modalRepository.findAllById(any())).thenReturn(java.util.List.of(modal));
 
         assertThrows(BusinessException.class, () -> viagemService.create(requestDTO));
         verify(viagemRepository, never()).save(any());
@@ -104,7 +105,7 @@ class ViagemServiceTest {
     @Test
     void createViagem_SameCidadeOrigemAndDestino_ThrowsException() {
         requestDTO.setIdCidadeDestino(1L);
-        when(modalRepository.findById(1L)).thenReturn(Optional.of(modal));
+        when(modalRepository.findAllById(any())).thenReturn(java.util.List.of(modal));
         when(cidadeRepository.findById(1L)).thenReturn(Optional.of(cidadeOrigem));
 
         assertThrows(BusinessException.class, () -> viagemService.create(requestDTO));
@@ -114,7 +115,7 @@ class ViagemServiceTest {
     @Test
     void createViagem_PartidaAfterChegada_ThrowsException() {
         requestDTO.setPartida(LocalDateTime.now().plusDays(3));
-        when(modalRepository.findById(1L)).thenReturn(Optional.of(modal));
+        when(modalRepository.findAllById(any())).thenReturn(java.util.List.of(modal));
         when(cidadeRepository.findById(1L)).thenReturn(Optional.of(cidadeOrigem));
         when(cidadeRepository.findById(2L)).thenReturn(Optional.of(cidadeDestino));
 
