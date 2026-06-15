@@ -19,8 +19,8 @@ public class PagamentoCredito extends Pagamento {
     @Column(nullable = false)
     private Integer parcelas;
 
-    @Column(nullable = false)
-    private Integer numeroCartao;
+    @Column(nullable = false, length = 20)
+    private String numeroCartao;
     
     @Override
     public TipoPagamento getTipo() {
