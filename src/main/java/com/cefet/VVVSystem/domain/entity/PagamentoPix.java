@@ -1,5 +1,7 @@
 package com.cefet.VVVSystem.domain.entity;
 
+import com.cefet.VVVSystem.domain.enums.TipoPagamento;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.PrimaryKeyJoinColumn;
@@ -16,4 +18,12 @@ public class PagamentoPix extends Pagamento {
 
     @Column(name = "chave_pix", nullable = false, length = 60)
     private String chavePix;
+
+    @Column(name = "valor", nullable = false)
+    private double valor;
+
+    @Override
+    public TipoPagamento getTipo() {
+        return TipoPagamento.PIX;
+    }
 }

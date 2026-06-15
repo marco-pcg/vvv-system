@@ -1,6 +1,11 @@
 package com.cefet.VVVSystem.domain.entity;
 
-import jakarta.persistence.*;
+import com.cefet.VVVSystem.domain.enums.TipoPagamento;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,4 +18,12 @@ public class PagamentoCredito extends Pagamento {
 
     @Column(nullable = false)
     private Integer parcelas;
+
+    @Column(nullable = false)
+    private Integer numeroCartao;
+    
+    @Override
+    public TipoPagamento getTipo() {
+        return TipoPagamento.CREDITO;
+    }
 }
