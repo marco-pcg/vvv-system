@@ -45,13 +45,14 @@ class CreditoPagamento {
 class DebitoPagamento {
   - numeroCartao: String
 }
-class PixPagamento {
-  - chavePix: String
+class DinheiroPagamento {
+  - valorRecebido: double
+  - troco: double
 }
 
 Pagamento <|-- CreditoPagamento
 Pagamento <|-- DebitoPagamento
-Pagamento <|-- PixPagamento
+Pagamento <|-- DinheiroPagamento
 
 ' --- Entidades Principais ---
 class Viagem {

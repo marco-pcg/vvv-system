@@ -34,7 +34,7 @@ rectangle "Sistema VVV" {
   usecase "Tipo de pagamento" as TipoPag
   usecase "Pagar no crédito" as PagCredito
   usecase "Pagar no débito" as PagDebito
-  usecase "Pagar com Pix" as PagPix
+  usecase "Pagar em dinheiro" as PagDinheiro
 
   ' Funcionário
   usecase "Reservar viagem (presencial)" as ResFisica
@@ -101,6 +101,6 @@ CadPassageiro <|-- CadMenor
 Pagamento <|-- TipoPag
 TipoPag <|-- PagCredito
 TipoPag <|-- PagDebito
-TipoPag <|-- PagPix
+TipoPag <|-- PagDinheiro
 
 @enduml

@@ -161,10 +161,11 @@ entity PAGAMENTO_DEBITO {
   numero_cartao
 }
 
-entity PAGAMENTO_PIX {
+entity PAGAMENTO_DINHEIRO {
   * id_pagamento
   --
-  chave_pix
+  valor_recebido
+  troco
 }
 
 ' --- Relacionamentos do MER ---
@@ -182,7 +183,7 @@ MODAL ||--o{ VIAGEM
 
 PAGAMENTO ||--|| PAGAMENTO_CREDITO
 PAGAMENTO ||--|| PAGAMENTO_DEBITO
-PAGAMENTO ||--|| PAGAMENTO_PIX
+PAGAMENTO ||--|| PAGAMENTO_DINHEIRO
 
 PONTO_DE_VENDA ||--o{ FUNCIONARIO_PDV
 FUNCIONARIO ||--o{ FUNCIONARIO_PDV

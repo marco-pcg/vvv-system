@@ -1,6 +1,6 @@
 package com.cefet.VVVSystem.service;
 
-import com.cefet.VVVSystem.domain.entity.PagamentoPix;
+import com.cefet.VVVSystem.domain.entity.PagamentoDinheiro;
 import com.cefet.VVVSystem.domain.entity.Reserva;
 import com.cefet.VVVSystem.domain.entity.*;
 import com.cefet.VVVSystem.strategy.*;
@@ -19,7 +19,7 @@ class ProcessadorPagamentoTest {
     void setUp() {
         // Instantiate the strategy list manually for a pure lightweight unit test
         List<PagamentoStrategy> estrategias = List.of(
-            new PagamentoPixStrategy(),
+            new PagamentoDinheiroStrategy(),
             new PagamentoDebitoStrategy(),
             new PagamentoCreditoStrategy()
         );
@@ -27,24 +27,24 @@ class ProcessadorPagamentoTest {
     }
 
     @Test
-    @DisplayName("Should automatically select Pix strategy and confirm reservation status")
-    void testProcessamentoComSucessoPix() {
+    @DisplayName("Should automatically select Cash (Dinheiro) strategy and confirm reservation status")
+    void testProcessamentoComSucessoDinheiro() {
         // Arrange
         Reserva reserva = new Reserva();
         reserva.setId(42L);
         reserva.setStatus(StatusReserva.PENDENTE);
 
-        PagamentoPix pix = new PagamentoPix();
-        pix.setChavePix("pix@cefet.br");
-        pix.setValor(250.00);
+        PagamentoDinheiro dinheiro = new PagamentoDinheiro();
+        dinheiro.setValorRecebido(300.00);
+        dinheiro.setTroco(50.00);
 
         // Act
-        processador.processarERegistrarPagamento(reserva, pix);
+        processador.processarERegistrarPagamento(reserva, dinheiro);
 
         // Assert
-        assertEquals(StatusPagamento.APROVADO, pix.getStatus(), "Payment status should transition to CONFIRMADO.");
-        assertEquals(StatusReserva.CONFIRMADA, reserva.getStatus(), "Reservation should be CONFIRMADA.");
-        assertNotNull(pix.getReserva(), "Payment record should be successfully bound to the reservation.");
+        assertEquals(StatusPagamento.APROVADO, dinheiro.getStatus(), "Payment status should transition to CONFIRMADO.");
+        assertEquals(StatusReserva.CONFIRMADA, reserva.getStatus(), "Reservation status should transition to CONFIRMADA.");
+        assertNotNull(dinheiro.getReserva(), "Payment record should be successfully bound to the reservation.");
     }
 
     @Test

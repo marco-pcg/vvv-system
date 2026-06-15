@@ -276,7 +276,7 @@ CREATE TABLE pagamento (
 
     CONSTRAINT uk_pagamento_reserva UNIQUE (id_reserva),
     CONSTRAINT fk_pagamento_reserva FOREIGN KEY (id_reserva) REFERENCES reserva (id),
-    CONSTRAINT ck_pagamento_tipo    CHECK (tipo IN ('CREDITO','DEBITO','PIX')),
+    CONSTRAINT ck_pagamento_tipo    CHECK (tipo IN ('CREDITO','DEBITO','DINHEIRO')),
     CONSTRAINT ck_pagamento_status  CHECK (status IN ('PENDENTE','APROVADO','RECUSADO','ESTORNADO'))
 );
 
@@ -303,12 +303,12 @@ CREATE TABLE pagamento_debito (
 
 -- -------------------------------------------------------
 
-CREATE TABLE pagamento_pix (
-    id        BIGINT        NOT NULL PRIMARY KEY,
-    chave_pix VARCHAR(60)   NOT NULL,
-    valor     DOUBLE PRECISION NOT NULL,
+CREATE TABLE pagamento_dinheiro (
+    id             BIGINT           NOT NULL PRIMARY KEY,
+    valor_recebido DOUBLE PRECISION NOT NULL,
+    troco          DOUBLE PRECISION NOT NULL,
 
-    CONSTRAINT fk_pgto_pix FOREIGN KEY (id) REFERENCES pagamento (id)
+    CONSTRAINT fk_pgto_dinheiro FOREIGN KEY (id) REFERENCES pagamento (id)
 );
 
 -- ============================================================
