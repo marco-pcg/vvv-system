@@ -15,11 +15,8 @@ import lombok.Setter;
 @Table(name = "pagamento_debito")
 @PrimaryKeyJoinColumn(name = "id")
 public class PagamentoDebito extends Pagamento {
-    @Column(nullable = false)
-    private Integer parcelas;
-
-    @Column(nullable = false)
-    private Integer numeroCartao;
+    @Column(nullable = false, length = 20)
+    private String numeroCartao;
 
     @Override
     public TipoPagamento getTipo() {

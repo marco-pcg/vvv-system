@@ -57,7 +57,7 @@ class ProcessadorPagamentoTest {
         reserva.setValorTotal(new java.math.BigDecimal("100.00"));
 
         PagamentoCredito credito = new PagamentoCredito();
-        credito.setNumeroCartao(1234);
+        credito.setNumeroCartao("1234");
         credito.setParcelas(4);
         credito.setReserva(reserva);
 
@@ -80,7 +80,7 @@ class ProcessadorPagamentoTest {
         reserva.setValorTotal(new java.math.BigDecimal("100.00"));
 
         PagamentoCredito credito = new PagamentoCredito();
-        credito.setNumeroCartao(5678);
+        credito.setNumeroCartao("5678");
         credito.setParcelas(5);
         credito.setReserva(reserva);
 
@@ -91,5 +91,26 @@ class ProcessadorPagamentoTest {
         assertEquals(StatusPagamento.APROVADO, credito.getStatus());
         assertEquals(StatusReserva.CONFIRMADA, reserva.getStatus());
         assertEquals(new java.math.BigDecimal("105.00"), reserva.getValorTotal(), "Value should have 5% interest applied.");
+    }
+
+    @Test
+    @DisplayName("Should automatically select Debito strategy and process successfully")
+    void testProcessamentoComSucessoDebito() {
+        // Arrange
+        Reserva reserva = new Reserva();
+        reserva.setId(12L);
+        reserva.setStatus(StatusReserva.PENDENTE);
+        reserva.setValorTotal(new java.math.BigDecimal("100.00"));
+
+        PagamentoDebito debito = new PagamentoDebito();
+        debito.setNumeroCartao("9876543210987654");
+        debito.setReserva(reserva);
+
+        // Act
+        processador.processarERegistrarPagamento(reserva, debito);
+
+        // Assert
+        assertEquals(StatusPagamento.APROVADO, debito.getStatus());
+        assertEquals(StatusReserva.CONFIRMADA, reserva.getStatus());
     }
 }
