@@ -66,7 +66,7 @@ class ReservaServiceTest {
 
         viagem = new Viagem();
         viagem.setId(1L);
-        viagem.setModal(modal);
+        viagem.setModais(new java.util.HashSet<>(java.util.List.of(modal)));
         viagem.setPreco(new BigDecimal("200.00"));
         viagem.setPartida(LocalDateTime.of(2026, 8, 1, 10, 0));
 

@@ -44,7 +44,7 @@ class ProcessadorPagamentoTest {
         // Assert
         assertEquals(StatusPagamento.APROVADO, pix.getStatus(), "Payment status should transition to CONFIRMADO.");
         assertEquals(StatusReserva.CONFIRMADA, reserva.getStatus(), "Reservation should be CONFIRMADA.");
-        assertNotNull(reserva.getPagamento(), "Payment record should be successfully bound to the reservation.");
+        assertNotNull(pix.getReserva(), "Payment record should be successfully bound to the reservation.");
     }
 
     @Test

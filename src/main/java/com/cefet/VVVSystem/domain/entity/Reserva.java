@@ -55,10 +55,6 @@ public class Reserva {
     @Column(name = "valor_total", nullable = false, precision = 10, scale = 2)
     private BigDecimal valorTotal;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_pagamento", nullable = false)
-    private Pagamento pagamento;
-
     @Override
     public boolean equals(Object o) {
         if (this == o)
