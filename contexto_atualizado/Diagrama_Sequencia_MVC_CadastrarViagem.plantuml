@@ -1,0 +1,30 @@
+@startuml
+title Diagrama de Sequência - Cadastrar Viagem
+hide footbox
+
+participant "Frontend (View)" as View
+participant "ViagemController" as Controller
+participant "ViagemService\n(Model)" as Service
+participant "ViagemRepository\n(Model)" as Repository
+
+View -> Controller : 1: POST /api/viagens (ViagemRequestDTO)
+activate Controller
+
+Note over Controller: A anotação @Valid do Spring\nvalida os campos automaticamente.
+
+Controller -> Service : 1.1: create(dto)
+activate Service
+
+Service -> Service : 1.1.1: Validar Regras de Negócio\n(Conflitos de horário, etc)
+
+Service -> Repository : 1.1.2: save(viagem)
+activate Repository
+Repository --> Service : viagemSalva
+deactivate Repository
+
+Service --> Controller : ViagemResponseDTO
+deactivate Service
+
+Controller --> View : 201 Created (ViagemResponseDTO)
+deactivate Controller
+@enduml

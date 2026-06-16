@@ -15,4 +15,9 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
      * Usado para controle de capacidade / anti-overbooking.
      */
     long countByViagemIdAndStatusIn(Long viagemId, List<StatusReserva> statuses);
+
+    /**
+     * Verifica se já existe uma reserva ativa para um determinado passageiro em uma viagem.
+     */
+    boolean existsByPassageiroIdAndViagemIdAndStatusIn(Long passageiroId, Long viagemId, List<StatusReserva> statuses);
 }

@@ -1,0 +1,30 @@
+@startuml
+title Diagrama de Sequência - Processo de Compra
+hide footbox
+
+participant "Frontend (View)" as View
+participant "ReservaController" as Controller
+participant "ReservaService\n(Model)" as Service
+participant "ReservaRepository\n(Model)" as Repository
+
+View -> Controller : 1: POST /api/reservas (ReservaRequestDTO)
+activate Controller
+
+Note over Controller: A anotação @Valid do Spring\nvalida os campos automaticamente.
+
+Controller -> Service : 1.1: create(dto)
+activate Service
+
+Service -> Service : 1.1.1: Validar Regras de Negócio\n(Overbooking, Duplicidade, etc)
+
+Service -> Repository : 1.1.2: save(reserva)
+activate Repository
+Repository --> Service : reservaSalva
+deactivate Repository
+
+Service --> Controller : ReservaResponseDTO
+deactivate Service
+
+Controller --> View : 201 Created (ReservaResponseDTO)
+deactivate Controller
+@enduml

@@ -1,0 +1,28 @@
+@startuml
+title Diagrama de Sequência - Cadastrar Modal
+hide footbox
+
+participant "Frontend (View)" as View
+participant "ModalController" as Controller
+participant "ModalService\n(Model)" as Service
+participant "ModalRepository\n(Model)" as Repository
+
+View -> Controller : 1: POST /modais (ModalRequestDTO)
+activate Controller
+
+Note over Controller: A anotação @Valid do Spring\nvalida os campos automaticamente.
+
+Controller -> Service : 1.1: criar(dto)
+activate Service
+
+Service -> Repository : 1.1.1: save(modal)
+activate Repository
+Repository --> Service : modalSalvo
+deactivate Repository
+
+Service --> Controller : ModalResponseDTO
+deactivate Service
+
+Controller --> View : 201 Created (ApiResponse)
+deactivate Controller
+@enduml

@@ -63,6 +63,14 @@ public class ViagemService {
             throw new BusinessException("A data de partida deve ser anterior à data de chegada.");
         }
 
+        // Validação de Conflito de Horário para os Modais (Impede agendar o mesmo ônibus para duas viagens simultâneas)
+        long conflitos = viagemRepository.countViagensConflitantes(
+                new java.util.ArrayList<>(dto.getIdsModais()), dto.getPartida(), dto.getChegada()
+        );
+        if (conflitos > 0) {
+            throw new BusinessException("Um ou mais veículos já estão ocupados em outra viagem nesse mesmo horário.");
+        }
+
         Viagem viagem = viagemMapper.toEntity(dto, modais, cidadeOrigem, cidadeDestino, escalas);
         viagem.setStatus(StatusViagem.AGENDADA);
 
