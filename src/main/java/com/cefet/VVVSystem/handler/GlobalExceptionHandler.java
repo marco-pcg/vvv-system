@@ -14,6 +14,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import com.cefet.VVVSystem.exception.UnauthorizedException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -80,6 +81,13 @@ public class GlobalExceptionHandler {
         log.warn("Falha na autenticação: {}", ex.getMessage());
         return ApiResponse.error(HttpStatus.UNAUTHORIZED, "Falha na autenticação",
                 "Credenciais inválidas ou token expirado");
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleUnauthorizedException(UnauthorizedException ex) {
+        log.warn("Acesso não autorizado: {}", ex.getMessage());
+        return ApiResponse.error(HttpStatus.UNAUTHORIZED, "Não Autorizado",
+                ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
