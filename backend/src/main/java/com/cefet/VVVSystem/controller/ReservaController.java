@@ -32,6 +32,14 @@ public class ReservaController {
         return ResponseEntity.ok(reservaService.findAll());
     }
 
+    @GetMapping("/minhas")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<ReservaResponseDTO>> findMinhasReservas() {
+        org.springframework.security.core.Authentication auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        com.cefet.VVVSystem.security.MainUser mainUser = (com.cefet.VVVSystem.security.MainUser) auth.getPrincipal();
+        return ResponseEntity.ok(reservaService.findMinhasReservas(mainUser.getUser().getId()));
+    }
+
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority(T(com.cefet.VVVSystem.security.RoleConstants).PERM_RESERVA_READ, T(com.cefet.VVVSystem.security.RoleConstants).PERM_RESERVA_ONLINE_READ, T(com.cefet.VVVSystem.security.RoleConstants).PERM_RESERVA_SELF_MANAGE, T(com.cefet.VVVSystem.security.RoleConstants).PERM_RESERVA_MANAGE_ALL)")
     public ResponseEntity<ReservaResponseDTO> findById(@PathVariable Long id) {

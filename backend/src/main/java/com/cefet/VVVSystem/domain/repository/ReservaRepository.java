@@ -22,4 +22,9 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
      * Verifica se já existe uma reserva ativa para um determinado passageiro em uma viagem.
      */
     boolean existsByPassageiroIdAndViagemIdAndStatusIn(Long passageiroId, Long viagemId, List<StatusReserva> statuses);
+
+    /**
+     * Retorna as reservas associadas a um cliente (usuário logado).
+     */
+    List<Reserva> findByClienteUserId(Long userId);
 }

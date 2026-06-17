@@ -22,4 +22,13 @@ public interface ViagemRepository extends JpaRepository<Viagem, Long> {
     long countViagensConflitantes(@Param("modalIds") List<Long> modalIds, 
                                   @Param("partida") LocalDateTime partida, 
                                   @Param("chegada") LocalDateTime chegada);
+
+    @Query("SELECT v FROM Viagem v WHERE v.cidadeOrigem.id = :origemId " +
+           "AND v.cidadeDestino.id = :destinoId " +
+           "AND v.partida >= :dataInicio AND v.partida <= :dataFim " +
+           "AND v.status = 'AGENDADA'")
+    List<Viagem> findViagensDisponiveis(@Param("origemId") Long origemId,
+                                        @Param("destinoId") Long destinoId,
+                                        @Param("dataInicio") LocalDateTime dataInicio,
+                                        @Param("dataFim") LocalDateTime dataFim);
 }

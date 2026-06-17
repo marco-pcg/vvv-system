@@ -22,19 +22,22 @@ public class DatabaseSeeder implements CommandLineRunner {
     private final ViagemRepository viagemRepository;
     private final ClienteRepository clienteRepository;
     private final PassageiroRepository passageiroRepository;
+    private final UserRepository userRepository;
 
     public DatabaseSeeder(CidadeRepository cidadeRepository,
                           TransportadoraRepository transportadoraRepository,
                           ModalRepository modalRepository,
                           ViagemRepository viagemRepository,
                           ClienteRepository clienteRepository,
-                          PassageiroRepository passageiroRepository) {
+                          PassageiroRepository passageiroRepository,
+                          UserRepository userRepository) {
         this.cidadeRepository = cidadeRepository;
         this.transportadoraRepository = transportadoraRepository;
         this.modalRepository = modalRepository;
         this.viagemRepository = viagemRepository;
         this.clienteRepository = clienteRepository;
         this.passageiroRepository = passageiroRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -93,6 +96,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         Cliente cliente = new Cliente();
         cliente.setPessoa(pessoaCliente);
+        cliente.setUser(userRepository.findByUsername("cliente").orElse(null));
         cliente = clienteRepository.save(cliente);
 
         Pessoa pessoaPassageiro = new Pessoa();

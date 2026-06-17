@@ -1,4 +1,3 @@
-import * as React from "react"
 import { Bus, Plane, Train, Ship, ArrowRight } from "lucide-react"
 import { Button } from "./Button"
 import { Badge } from "./Badge"

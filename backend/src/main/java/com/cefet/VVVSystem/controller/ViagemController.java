@@ -27,9 +27,17 @@ public class ViagemController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority(T(com.cefet.VVVSystem.security.RoleConstants).PERM_VIAGEM_MANAGE, T(com.cefet.VVVSystem.security.RoleConstants).PERM_VIAGEM_READ)")
+    @PreAuthorize("hasAnyAuthority(T(com.cefet.VVVSystem.security.RoleConstants).PERM_VIAGEM_READ, T(com.cefet.VVVSystem.security.RoleConstants).PERM_VIAGEM_MANAGE)")
     public ResponseEntity<List<ViagemResponseDTO>> findAll() {
         return ResponseEntity.ok(viagemService.findAll());
+    }
+
+    @GetMapping("/busca")
+    public ResponseEntity<List<ViagemResponseDTO>> buscarViagens(
+            @RequestParam Long origemId,
+            @RequestParam Long destinoId,
+            @RequestParam @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate data) {
+        return ResponseEntity.ok(viagemService.buscarViagensDisponiveis(origemId, destinoId, data));
     }
 
     @GetMapping("/{id}")

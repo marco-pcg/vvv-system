@@ -92,6 +92,18 @@ public class ViagemService {
         return viagemMapper.toResponseDTO(viagem);
     }
 
+    @Transactional(readOnly = true)
+    public List<ViagemResponseDTO> buscarViagensDisponiveis(Long origemId, Long destinoId, java.time.LocalDate data) {
+        java.time.LocalDateTime inicio = data.atStartOfDay();
+        java.time.LocalDateTime fim = data.atTime(23, 59, 59);
+        
+        List<Viagem> viagens = viagemRepository.findViagensDisponiveis(origemId, destinoId, inicio, fim);
+        
+        return viagens.stream()
+                .map(viagemMapper::toResponseDTO)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public ViagemResponseDTO update(Long id, ViagemRequestDTO dto) {
         Viagem viagem = getViagemById(id);

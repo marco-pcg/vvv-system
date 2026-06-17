@@ -69,6 +69,7 @@ public class SecurityConfig {
                                                                                  // publicamente
                     .requestMatchers(HttpMethod.POST, "/auth/register").permitAll() // Endpoint de cadastro liberado
                                                                                     // publicamente
+                    .requestMatchers(HttpMethod.GET, "/api/viagens/busca").permitAll() // Busca de viagens liberada publicamente
                     .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll() // Documentação
                                                                                                           // do Swagger
                                                                                                           // liberada

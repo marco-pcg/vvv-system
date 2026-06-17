@@ -38,15 +38,36 @@ public class ViagemMapper {
         dto.setId(viagem.getId());
         if (viagem.getModais() != null) {
             dto.setIdsModais(viagem.getModais().stream().map(Modal::getId).collect(java.util.stream.Collectors.toList()));
+            
+            dto.setModais(viagem.getModais().stream().map(m -> {
+                ViagemResponseDTO.ModalResponse mr = new ViagemResponseDTO.ModalResponse();
+                mr.setTipo(m.getTipo() != null ? m.getTipo().name() : null);
+                if (m.getTransportadora() != null) {
+                    ViagemResponseDTO.TransportadoraResponse tr = new ViagemResponseDTO.TransportadoraResponse();
+                    tr.setNome(m.getTransportadora().getNome());
+                    mr.setTransportadora(tr);
+                }
+                return mr;
+            }).collect(java.util.stream.Collectors.toList()));
         }
         if (viagem.getEscalas() != null) {
             dto.setIdsEscalas(viagem.getEscalas().stream().map(Cidade::getId).collect(java.util.stream.Collectors.toList()));
         }
         if (viagem.getCidadeOrigem() != null) {
             dto.setIdCidadeOrigem(viagem.getCidadeOrigem().getId());
+            
+            ViagemResponseDTO.CidadeResponse co = new ViagemResponseDTO.CidadeResponse();
+            co.setNome(viagem.getCidadeOrigem().getNome());
+            co.setUf(viagem.getCidadeOrigem().getUf() != null ? viagem.getCidadeOrigem().getUf().name() : null);
+            dto.setCidadeOrigem(co);
         }
         if (viagem.getCidadeDestino() != null) {
             dto.setIdCidadeDestino(viagem.getCidadeDestino().getId());
+            
+            ViagemResponseDTO.CidadeResponse cd = new ViagemResponseDTO.CidadeResponse();
+            cd.setNome(viagem.getCidadeDestino().getNome());
+            cd.setUf(viagem.getCidadeDestino().getUf() != null ? viagem.getCidadeDestino().getUf().name() : null);
+            dto.setCidadeDestino(cd);
         }
         dto.setPartida(viagem.getPartida());
         dto.setChegada(viagem.getChegada());

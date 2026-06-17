@@ -100,6 +100,13 @@ public class ReservaService {
     }
 
     @Transactional(readOnly = true)
+    public List<ReservaResponseDTO> findMinhasReservas(Long usuarioId) {
+        return reservaRepository.findByClienteUserId(usuarioId).stream()
+                .map(reservaMapper::toResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
     public ReservaResponseDTO findById(Long id) {
         Reserva reserva = getReservaById(id);
         return reservaMapper.toResponseDTO(reserva);

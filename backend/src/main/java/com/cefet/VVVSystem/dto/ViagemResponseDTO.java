@@ -29,4 +29,28 @@ public class ViagemResponseDTO {
     private StatusViagem status;
     @Schema(example = "150.50")
     private BigDecimal preco;
+
+    private CidadeResponse cidadeOrigem;
+    private CidadeResponse cidadeDestino;
+    private java.util.List<ModalResponse> modais;
+
+    @Getter
+    @Setter
+    public static class CidadeResponse {
+        private String nome;
+        private String uf;
+    }
+
+    @Getter
+    @Setter
+    public static class TransportadoraResponse {
+        private String nome;
+    }
+
+    @Getter
+    @Setter
+    public static class ModalResponse {
+        private String tipo;
+        private TransportadoraResponse transportadora;
+    }
 }
