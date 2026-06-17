@@ -1,0 +1,36 @@
+@startuml
+title CadastrarModal MVC
+
+skinparam classAttributeIconSize 0
+hide circle
+
+package "pkg" {
+  class Cadastrar {
+    + submeterFormulario(): void
+  }
+
+  class CadastrarModalView {
+    + submeterFormulario(): void
+  }
+
+  class ModalController {
+    + create(dto: ModalRequestDTO): ResponseEntity<ModalResponseDTO>
+  }
+
+  class ModalService {
+    + create(dto: ModalRequestDTO): ModalResponseDTO
+  }
+
+  class Modal {
+    - codigo: String
+    - tipo: TipoModal
+    - capacidade: Integer
+    - statusOperacional: StatusOperacional
+  }
+
+  Cadastrar <|-- CadastrarModalView
+  CadastrarModalView -right- ModalController
+  ModalController -down- ModalService
+  ModalService -down- Modal
+}
+@enduml

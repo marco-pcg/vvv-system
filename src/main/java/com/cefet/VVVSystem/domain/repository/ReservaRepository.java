@@ -17,4 +17,9 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     long countByViagemIdAndStatusIn(Long viagemId, List<StatusReserva> statuses);
 
     List<Reserva> findByStatusAndIntegradoTransportadoraFalse(StatusReserva status);
+
+    /**
+     * Verifica se já existe uma reserva ativa para um determinado passageiro em uma viagem.
+     */
+    boolean existsByPassageiroIdAndViagemIdAndStatusIn(Long passageiroId, Long viagemId, List<StatusReserva> statuses);
 }

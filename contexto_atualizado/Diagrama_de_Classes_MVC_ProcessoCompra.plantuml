@@ -1,0 +1,35 @@
+@startuml
+title ProcessoCompra MVC
+
+skinparam classAttributeIconSize 0
+hide circle
+
+package "pkg" {
+  class Processar {
+    + submeterFormulario(): void
+  }
+
+  class ProcessoCompraView {
+    + submeterFormulario(): void
+  }
+
+  class ReservaController {
+    + create(dto: ReservaRequestDTO): ResponseEntity<ReservaResponseDTO>
+  }
+
+  class ReservaService {
+    + create(dto: ReservaRequestDTO): ReservaResponseDTO
+  }
+
+  class Reserva {
+    - codigo: String
+    - status: StatusReserva
+    - valorTotal: BigDecimal
+  }
+
+  Processar <|-- ProcessoCompraView
+  ProcessoCompraView -right- ReservaController
+  ReservaController -down- ReservaService
+  ReservaService -down- Reserva
+}
+@enduml

@@ -14,16 +14,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class ProcessadorPagamentoTest {
 
     private ProcessadorPagamento processador;
+    private com.cefet.VVVSystem.domain.repository.TicketRepository ticketRepositoryMock;
 
     @BeforeEach
     void setUp() {
+        ticketRepositoryMock = org.mockito.Mockito.mock(com.cefet.VVVSystem.domain.repository.TicketRepository.class);
         // Instantiate the strategy list manually for a pure lightweight unit test
         List<PagamentoStrategy> estrategias = List.of(
             new PagamentoDinheiroStrategy(),
             new PagamentoDebitoStrategy(),
             new PagamentoCreditoStrategy()
         );
-        processador = new ProcessadorPagamento(estrategias);
+        processador = new ProcessadorPagamento(estrategias, ticketRepositoryMock);
     }
 
     @Test

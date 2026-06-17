@@ -285,6 +285,7 @@ CREATE TABLE pagamento (
 CREATE TABLE pagamento_credito (
     id            BIGINT  NOT NULL PRIMARY KEY,
     parcelas      INTEGER NOT NULL,
+    numero_cartao VARCHAR(20) NOT NULL,
 
     CONSTRAINT fk_pgto_credito          FOREIGN KEY (id) REFERENCES pagamento (id),
     CONSTRAINT ck_pgto_credito_parcelas CHECK (parcelas > 0)
@@ -295,6 +296,7 @@ CREATE TABLE pagamento_credito (
 CREATE TABLE pagamento_debito (
     id            BIGINT  NOT NULL PRIMARY KEY,
     parcelas      INTEGER NOT NULL,
+    numero_cartao VARCHAR(20) NOT NULL,
 
     CONSTRAINT fk_pgto_debito FOREIGN KEY (id) REFERENCES pagamento (id)
 );

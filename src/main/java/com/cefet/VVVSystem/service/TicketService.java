@@ -3,7 +3,10 @@ package com.cefet.VVVSystem.service;
 import com.cefet.VVVSystem.domain.entity.Reserva;
 import com.cefet.VVVSystem.domain.entity.Ticket;
 import com.cefet.VVVSystem.domain.repository.TicketRepository;
+import com.cefet.VVVSystem.dto.TicketResponseDTO;
 import com.cefet.VVVSystem.exception.BusinessException;
+import com.cefet.VVVSystem.exception.ResourceNotFoundException;
+import com.cefet.VVVSystem.mapper.TicketMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +18,7 @@ import java.util.UUID;
 public class TicketService {
 
     private final TicketRepository ticketRepository;
+    private final TicketMapper ticketMapper;
 
     @Transactional
     public Ticket emitirTicket(Reserva reserva) {
@@ -22,14 +26,18 @@ public class TicketService {
             throw new BusinessException("Já existe um ticket emitido para esta reserva.");
         }
 
-        Ticket ticket = new Ticket();
-        ticket.setReserva(reserva);
-        // Gera um número único para o ticket
-        ticket.setNumero(gerarNumeroTicket());
-        // Atribui assento aleatório ou fixo para efeito de MVP
-        ticket.setAssento(gerarAssento(reserva));
-
+        String numero = gerarNumeroTicket();
+        String assento = gerarAssento(reserva);
+        
+        Ticket ticket = reserva.instanciarTicket(numero, assento);
         return ticketRepository.save(ticket);
+    }
+
+    @Transactional(readOnly = true)
+    public TicketResponseDTO findByNumero(String numero) {
+        Ticket ticket = ticketRepository.findByNumero(numero)
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket", "numero", numero));
+        return ticketMapper.toResponseDTO(ticket);
     }
 
     private String gerarNumeroTicket() {
