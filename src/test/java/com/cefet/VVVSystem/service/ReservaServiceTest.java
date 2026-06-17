@@ -40,8 +40,6 @@ class ReservaServiceTest {
     @Mock
     private PassageiroRepository passageiroRepository;
     @Mock
-    private DescontoService descontoService;
-    @Mock
     private ReservaMapper reservaMapper;
 
     @InjectMocks
@@ -84,8 +82,6 @@ class ReservaServiceTest {
         when(clienteRepository.findById(1L)).thenReturn(Optional.of(cliente));
         when(passageiroRepository.findById(1L)).thenReturn(Optional.of(passageiro));
         when(reservaRepository.countByViagemIdAndStatusIn(eq(1L), anyList())).thenReturn(0L);
-        when(descontoService.calcularPrecoComDesconto(any(), any(), any()))
-                .thenReturn(new BigDecimal("200.00"));
 
         Reserva reservaSalva = new Reserva();
         reservaSalva.setId(1L);
@@ -100,20 +96,18 @@ class ReservaServiceTest {
 
         assertNotNull(result);
         assertEquals(new BigDecimal("200.00"), result.getValorTotal());
-        verify(descontoService).calcularPrecoComDesconto(any(), eq(passageiro), any());
         verify(reservaRepository).save(any(Reserva.class));
     }
 
     @Test
     void create_Success_CriancaComDesconto() {
         passageiro.setDataNascimento(LocalDate.of(2018, 1, 1)); // criança ~8 anos
+        passageiro.setPossuiAcompanhante(true);
 
         when(viagemRepository.findById(1L)).thenReturn(Optional.of(viagem));
         when(clienteRepository.findById(1L)).thenReturn(Optional.of(cliente));
         when(passageiroRepository.findById(1L)).thenReturn(Optional.of(passageiro));
         when(reservaRepository.countByViagemIdAndStatusIn(eq(1L), anyList())).thenReturn(0L);
-        when(descontoService.calcularPrecoComDesconto(any(), any(), any()))
-                .thenReturn(new BigDecimal("100.00")); // 50% de desconto
 
         Reserva reservaSalva = new Reserva();
         reservaSalva.setId(1L);
@@ -121,15 +115,13 @@ class ReservaServiceTest {
 
         ReservaResponseDTO responseDTO = new ReservaResponseDTO();
         responseDTO.setId(1L);
-        responseDTO.setValorTotal(new BigDecimal("100.00"));
+        responseDTO.setValorTotal(new BigDecimal("120.00"));
         when(reservaMapper.toResponseDTO(any())).thenReturn(responseDTO);
 
         ReservaResponseDTO result = reservaService.create(requestDTO);
 
         assertNotNull(result);
-        assertEquals(new BigDecimal("100.00"), result.getValorTotal());
-        verify(descontoService).calcularPrecoComDesconto(
-                eq(new BigDecimal("200.00")), eq(passageiro), any());
+        assertEquals(new BigDecimal("120.00"), result.getValorTotal());
     }
 
     @Test

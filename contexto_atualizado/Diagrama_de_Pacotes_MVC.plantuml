@@ -1,0 +1,87 @@
+@startuml
+title Diagrama de Pacotes (Arquitetura REST MVC / Spring Boot)
+skinparam packageStyle folder
+skinparam linetype ortho
+skinparam nodesep 40
+skinparam ranksep 60
+
+' Pacote base (Core) alinhado à esquerda e organizado verticalmente
+package "Sistema VVV" as P_Sistema {
+  package "View" as sys_view
+  package "Control" as sys_control
+  package "Model" as sys_model
+  package "Outros" as sys_outros
+  
+  sys_view -[hidden]down- sys_control
+  sys_control -[hidden]down- sys_model
+  sys_model -[hidden]down- sys_outros
+}
+
+' Pacotes de implementação que ficarão empilhados à direita
+package "Telas (Frontend)" as P_Telas {
+  package "Login" as tela_log
+  package "Gestão" as tela_ges
+  package "Vendas Online" as tela_ven
+  
+  tela_log -[hidden]right- tela_ges
+  tela_ges -[hidden]right- tela_ven
+}
+
+package "Controller" as P_Controller {
+  package "ClassesController" as ctrl_classes {
+    package "Reserva" as c_res
+    package "Viagem" as c_via
+    package "Modal" as c_mod
+    package "Funcionario" as c_fun
+    
+    c_res -[hidden]right- c_via
+    c_via -[hidden]right- c_mod
+    c_mod -[hidden]right- c_fun
+  }
+  package "LoginController" as ctrl_log
+  package "PagamentoController" as ctrl_pag
+  
+  ctrl_classes -[hidden]right- ctrl_log
+  ctrl_log -[hidden]right- ctrl_pag
+}
+
+package "Service" as P_Service {
+  package "ClassesService" as srv_classes {
+    package "ReservaService" as s_res
+    package "ViagemService" as s_via
+    package "ProcessadorPagamento" as s_pag
+    
+    s_res -[hidden]right- s_via
+    s_via -[hidden]right- s_pag
+  }
+}
+
+package "Acesso aos Dados" as P_Dados {
+  package "Entidades" as dad_ent
+  package "Repositories" as dad_repo
+  
+  dad_ent -[hidden]right- dad_repo
+}
+
+' Forçar alinhamento: Sistema VVV à esquerda dos demais pacotes com maior espaçamento
+P_Sistema -[hidden]right---- P_Telas
+P_Sistema -[hidden]right---- P_Controller
+P_Sistema -[hidden]right---- P_Service
+P_Sistema -[hidden]right---- P_Dados
+
+' Forçar empilhamento vertical exato no lado direito
+P_Telas -[hidden]down- P_Controller
+P_Controller -[hidden]down- P_Service
+P_Service -[hidden]down- P_Dados
+
+' Setas de Dependência (Tracejadas com ponta de pauzinho aberta)
+P_Telas ..> P_Controller
+P_Controller ..> P_Service
+P_Service ..> P_Dados
+
+P_Telas .left.> P_Sistema
+P_Controller .left.> P_Sistema
+P_Service .left.> P_Sistema
+P_Dados .left.> P_Sistema
+
+@enduml
