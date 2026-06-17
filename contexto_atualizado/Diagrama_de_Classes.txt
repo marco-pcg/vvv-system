@@ -1,0 +1,153 @@
+@startuml
+title Diagrama de Classes
+
+' --- Classes Abstratas ---
+abstract class Pessoa {
+  - cpf: String
+  - nome: String
+  - cep: String
+  - data_nasc: Date
+  - email: String
+}
+
+abstract class Pagamento {
+  - valor: double
+  - data: Date
+  - status: String
+  + processarTransacao(parcelamento: int, juros: double): boolean
+}
+
+' --- Heranças de Pessoa ---
+class Cliente {
+  + solicitarReserva()
+}
+class Funcionario {
+  - pontosDeVenda: PontoDeVenda[]
+  + registrarVinculoPonto(pdv: PontoDeVenda)
+  + contarPontosAutorizadosAtuais(): int
+  + buscarVendasPorStatus(status: String): Reserva[]
+  + autorizarEmPontoDeVenda(id: int)
+  + processarAprovacao()
+}
+class Passageiro {
+  - possuiAcompanhante: boolean
+  + validarCadastroIdade(): boolean
+}
+
+Pessoa <|-- Cliente
+Pessoa <|-- Funcionario
+Pessoa <|-- Passageiro
+
+' --- Heranças de Pagamento ---
+class CreditoPagamento {
+  - numeroCartao: String
+}
+class DebitoPagamento {
+  - numeroCartao: String
+}
+class DinheiroPagamento {
+  - valorRecebido: double
+  - troco: double
+}
+
+Pagamento <|-- CreditoPagamento
+Pagamento <|-- DebitoPagamento
+Pagamento <|-- DinheiroPagamento
+
+' --- Entidades Principais ---
+class Viagem {
+  - datas: Date[]
+  - status: String
+  + verificarDisponibilidadeCapacidade(): int
+}
+
+class Reserva {
+  - codigo: String
+  - status: String
+  - valorFinal: double
+  + calcularValorFinal(): double
+  + aplicarDesconto(porcentagem: double)
+  + setStatus(status: String)
+  + confirmarPagamento()
+  + cancelarOuBloquearReservas()
+}
+
+class Modal {
+  - codigo: String
+  - tipo: String
+  - capacidade: int
+  - statusOperacional: boolean
+  + verificarStatusOperacional(): boolean
+  + setStatus(status: String)
+  + buscarViagensAfetadas(datas: Date[]): Viagem[]
+}
+
+class Ticket {
+  - numero: String
+  - assento: String
+  + emitirTicket()
+}
+
+class Cidade {
+  - nome: String
+  - uf: String
+  + validarCidadesRoteiro(): boolean
+}
+
+class Transportadora {
+  - cnpj: String
+  - nome: String
+  + confirmacaoRecebimento()
+}
+
+class PontoDeVenda {
+  - cnpj: String
+  - endereco: String
+  - gerenteResponsavel: Funcionario
+  + verificarExistencia(): boolean
+}
+
+' --- Autenticação / RBAC ---
+class User {
+  - id: Long
+  - username: String
+  - passwordHash: String
+  - ativo: boolean
+  - ultimoLogin: Date
+}
+
+class Role {
+  - id: Long
+  - nome: String
+  - descricao: String
+}
+
+class Permission {
+  - id: Long
+  - nome: String
+  - descricao: String
+}
+
+' --- Relações (UML Tradicional) ---
+Viagem "1" -- "N" Cidade
+Viagem "N" -- "1" Modal
+Viagem "1" -- "N" Reserva
+
+Reserva "N" -- "1" Cliente
+Reserva "N" -- "1" Passageiro
+Reserva "1" -- "0..1" Pagamento
+Reserva "1" o-- "0..1" Ticket
+Reserva "N" -- "1" Transportadora
+
+Modal "N" -- "1" Transportadora
+
+Funcionario "1" -- "0..2" PontoDeVenda
+PontoDeVenda "N" --> "1" Funcionario : gerenteResponsavel
+
+' --- Relações RBAC ---
+Cliente "0..1" -- "0..1" User
+Funcionario "1" -- "1" User
+User "N" -- "N" Role
+Role "N" -- "N" Permission
+
+@enduml

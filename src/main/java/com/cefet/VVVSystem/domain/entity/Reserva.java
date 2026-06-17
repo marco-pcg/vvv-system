@@ -55,6 +55,9 @@ public class Reserva {
     @Column(name = "valor_total", nullable = false, precision = 10, scale = 2)
     private BigDecimal valorTotal;
 
+    @OneToOne(mappedBy = "reserva", cascade = jakarta.persistence.CascadeType.ALL, fetch = FetchType.LAZY)
+    private Ticket ticket;
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -68,5 +71,18 @@ public class Reserva {
     @Override
     public int hashCode() {
         return Objects.hash(codigo);
+    }
+
+    public void confirmarPagamento() {
+        this.status = StatusReserva.CONFIRMADA;
+    }
+
+    public Ticket instanciarTicket(String numero, String assento) {
+        if (this.status != StatusReserva.CONFIRMADA) {
+            throw new IllegalStateException("O ticket só pode ser emitido para uma reserva com pagamento confirmado (Status: CONFIRMADA).");
+        }
+        Ticket novoTicket = Ticket.emitirTicket(numero, assento, this);
+        this.ticket = novoTicket;
+        return novoTicket;
     }
 }

@@ -38,4 +38,22 @@ public class Ticket {
     public int hashCode() {
         return Objects.hash(numero);
     }
+
+    public static Ticket emitirTicket(String numero, String assento, Reserva reserva) {
+        if (numero == null || numero.trim().isEmpty()) {
+            throw new IllegalArgumentException("Número do ticket é obrigatório.");
+        }
+        if (assento == null || assento.trim().isEmpty()) {
+            throw new IllegalArgumentException("Assento do ticket é obrigatório.");
+        }
+        if (reserva == null) {
+            throw new IllegalArgumentException("A reserva associada ao ticket é obrigatória.");
+        }
+
+        Ticket ticket = new Ticket();
+        ticket.setNumero(numero);
+        ticket.setAssento(assento);
+        ticket.setReserva(reserva);
+        return ticket;
+    }
 }

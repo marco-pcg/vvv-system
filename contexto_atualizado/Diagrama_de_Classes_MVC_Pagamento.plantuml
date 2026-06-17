@@ -1,0 +1,35 @@
+@startuml
+title Pagamento MVC
+
+skinparam classAttributeIconSize 0
+hide circle
+
+package "pkg" {
+  class EfetuarPagamento {
+    + submeterPagamento(): void
+  }
+
+  class PagamentoView {
+    + submeterPagamento(): void
+  }
+
+  class PagamentoController {
+    + processar(dto: PagamentoRequestDTO): ResponseEntity<PagamentoResponseDTO>
+  }
+
+  class ProcessadorPagamento {
+    + processarERegistrarPagamento(reserva: Reserva, pagamento: Pagamento): void
+  }
+
+  class Pagamento {
+    - id: Long
+    - tipo: TipoPagamento
+    - status: StatusPagamento
+  }
+
+  EfetuarPagamento <|-- PagamentoView
+  PagamentoView -right- PagamentoController
+  PagamentoController -down- ProcessadorPagamento
+  ProcessadorPagamento -down- Pagamento
+}
+@enduml
