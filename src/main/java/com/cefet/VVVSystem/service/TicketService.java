@@ -10,6 +10,10 @@ import com.cefet.VVVSystem.mapper.TicketMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.AccessDeniedException;
+import com.cefet.VVVSystem.domain.entity.User;
 
 import java.util.UUID;
 
@@ -37,6 +41,23 @@ public class TicketService {
     public TicketResponseDTO findByNumero(String numero) {
         Ticket ticket = ticketRepository.findByNumero(numero)
                 .orElseThrow(() -> new ResourceNotFoundException("Ticket", "numero", numero));
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            boolean isAdminOrFuncionario = auth.getAuthorities().stream()
+                    .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")
+                            || a.getAuthority().equals("ROLE_GERENTE")
+                            || a.getAuthority().equals("ROLE_FUNCIONARIO"));
+
+            if (!isAdminOrFuncionario) {
+                String currentUsername = auth.getName();
+                User donoUser = ticket.getReserva().getCliente().getUser();
+                if (donoUser == null || !currentUsername.equals(donoUser.getUsername())) {
+                    throw new AccessDeniedException("Acesso negado: O ticket pertence a outro usuário.");
+                }
+            }
+        }
+
         return ticketMapper.toResponseDTO(ticket);
     }
 
