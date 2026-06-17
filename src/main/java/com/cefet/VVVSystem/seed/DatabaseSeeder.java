@@ -83,21 +83,27 @@ public class DatabaseSeeder implements CommandLineRunner {
         viagem.setModais(Set.of(onibus));
         viagem = viagemRepository.save(viagem);
 
-        // 5. Cliente e Passageiro
+        // 5. Cliente e Passageiro (Party Pattern)
+        Pessoa pessoaCliente = new Pessoa();
+        pessoaCliente.setNome("João Silva (Cliente)");
+        pessoaCliente.setCpf("11122233344");
+        pessoaCliente.setEmail("joao.cliente@teste.com");
+        pessoaCliente.setTelefone("21999999999");
+        pessoaCliente.setDataNascimento(LocalDate.of(1990, 5, 20));
+
         Cliente cliente = new Cliente();
-        cliente.setNome("João Silva (Cliente)");
-        cliente.setCpf("11122233344");
-        cliente.setEmail("joao.cliente@teste.com");
-        cliente.setTelefone("21999999999");
-        cliente.setDataNascimento(LocalDate.of(1990, 5, 20));
+        cliente.setPessoa(pessoaCliente);
         cliente = clienteRepository.save(cliente);
 
+        Pessoa pessoaPassageiro = new Pessoa();
+        pessoaPassageiro.setNome("Maria Silva (Passageira)");
+        pessoaPassageiro.setCpf("55566677788");
+        pessoaPassageiro.setEmail("maria.passageira@teste.com");
+        pessoaPassageiro.setDataNascimento(LocalDate.of(1995, 8, 15));
+
         Passageiro passageiro = new Passageiro();
-        passageiro.setNome("Maria Silva (Passageira)");
-        passageiro.setCpf("55566677788");
-        passageiro.setEmail("maria.passageira@teste.com");
+        passageiro.setPessoa(pessoaPassageiro);
         passageiro.setPossuiAcompanhante(false);
-        passageiro.setDataNascimento(LocalDate.of(1995, 8, 15));
         passageiro = passageiroRepository.save(passageiro);
 
         System.out.println("=================================================");

@@ -4,6 +4,7 @@ import com.cefet.VVVSystem.domain.entity.Cidade;
 import com.cefet.VVVSystem.domain.repository.CidadeRepository;
 import com.cefet.VVVSystem.dto.CidadeRequestDTO;
 import com.cefet.VVVSystem.dto.CidadeResponseDTO;
+import com.cefet.VVVSystem.exception.ConflictException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +37,7 @@ public class CidadeService {
     @Transactional
     public CidadeResponseDTO create(CidadeRequestDTO dto) {
         if (cidadeRepository.findByNomeAndUf(dto.nome(), dto.uf()).isPresent()) {
-            throw new RuntimeException("Já existe uma cidade cadastrada com este nome e UF.");
+            throw new ConflictException("Já existe uma cidade cadastrada com este nome e UF.");
         }
 
         Cidade cidade = new Cidade();
@@ -56,7 +57,7 @@ public class CidadeService {
         cidadeRepository.findByNomeAndUf(dto.nome(), dto.uf())
                 .filter(existing -> !existing.getId().equals(id))
                 .ifPresent(existing -> {
-                    throw new RuntimeException("Já existe outra cidade cadastrada com este nome e UF.");
+                    throw new ConflictException("Já existe outra cidade cadastrada com este nome e UF.");
                 });
 
         cidade.setNome(dto.nome());

@@ -26,21 +26,29 @@ public class FuncionarioService {
     @Autowired
     private PontoDeVendaRepository pontoDeVendaRepository;
 
+    @Autowired
+    private com.cefet.VVVSystem.domain.repository.PessoaRepository pessoaRepository;
+
     public FuncionarioResponseDTO criar(FuncionarioRequestDTO dto) {
-        // Validação básica da matrícula já feita pelo DTO (@NotBlank),
-        // mas aqui poderíamos adicionar regras complexas de negócio, como buscar se a matrícula já existe.
         if (funcionarioRepository.findByMatricula(dto.matricula()).isPresent()) {
             throw new ConflictException("Já existe um funcionário com esta matrícula");
         }
 
+        if (funcionarioRepository.findByPessoaCpf(dto.cpf()).isPresent()) {
+            throw new ConflictException("Este CPF já está cadastrado como funcionário");
+        }
+
+        com.cefet.VVVSystem.domain.entity.Pessoa pessoa = pessoaRepository.findByCpf(dto.cpf()).orElse(new com.cefet.VVVSystem.domain.entity.Pessoa());
+        pessoa.setCpf(dto.cpf());
+        pessoa.setNome(dto.nome());
+        pessoa.setCep(dto.cep());
+        pessoa.setDataNascimento(dto.dataNascimento());
+        pessoa.setEmail(dto.email());
+        pessoa.setTelefone(dto.telefone());
+
         Funcionario funcionario = new Funcionario();
-        funcionario.setCpf(dto.cpf());
-        funcionario.setNome(dto.nome());
-        funcionario.setCep(dto.cep());
-        funcionario.setDataNascimento(dto.dataNascimento());
+        funcionario.setPessoa(pessoa);
         funcionario.setMatricula(dto.matricula());
-        funcionario.setEmail(dto.email());
-        funcionario.setTelefone(dto.telefone());
 
         Funcionario saved = funcionarioRepository.save(funcionario);
         return new FuncionarioResponseDTO(saved);
@@ -62,19 +70,19 @@ public class FuncionarioService {
         Funcionario funcionario = funcionarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Funcionário", "id", id));
         
-        // Verifica se a matrícula mudou e se a nova matrícula já existe
         if (!funcionario.getMatricula().equals(dto.matricula()) && 
             funcionarioRepository.findByMatricula(dto.matricula()).isPresent()) {
             throw new ConflictException("Já existe outro funcionário com esta matrícula");
         }
 
-        funcionario.setCpf(dto.cpf());
-        funcionario.setNome(dto.nome());
-        funcionario.setCep(dto.cep());
-        funcionario.setDataNascimento(dto.dataNascimento());
+        com.cefet.VVVSystem.domain.entity.Pessoa pessoa = funcionario.getPessoa();
+        pessoa.setNome(dto.nome());
+        pessoa.setCep(dto.cep());
+        pessoa.setDataNascimento(dto.dataNascimento());
+        pessoa.setEmail(dto.email());
+        pessoa.setTelefone(dto.telefone());
+
         funcionario.setMatricula(dto.matricula());
-        funcionario.setEmail(dto.email());
-        funcionario.setTelefone(dto.telefone());
 
         Funcionario updated = funcionarioRepository.save(funcionario);
         return new FuncionarioResponseDTO(updated);

@@ -1,5 +1,5 @@
 -- ============================================================
--- VVV System — V4 Schema Migration (Roles e Permissions)
+-- VVV System — V2 Schema Migration (Roles e Permissions)
 -- ============================================================
 
 -- 1. Criar Perfis (Roles)
@@ -57,15 +57,10 @@ INSERT INTO permission (name, description) VALUES
 
 -- 3. Vincular Permissões aos Perfis (Role <-> Permission)
 
--- ROLE_ADMIN: Todas as de admin (e também pode ter as básicas, mas para simplificar, listamos as mapeadas)
+-- ROLE_ADMIN: Todas as permissões do sistema
 INSERT INTO role_permission (role_id, permission_id)
 SELECT r.id, p.id FROM role r, permission p 
-WHERE r.name = 'ROLE_ADMIN' 
-  AND p.name IN (
-    'user.manage', 'role.manage', 'permission.manage', 'funcionario.manage',
-    'transportadora.manage', 'modal.manage', 'viagem.manage', 'cidade.manage',
-    'pdv.manage', 'logs.read', 'system.config', 'reserva.manage_all', 'ticket.emit_manual'
-  );
+WHERE r.name = 'ROLE_ADMIN';
 
 -- ROLE_GERENTE
 INSERT INTO role_permission (role_id, permission_id)

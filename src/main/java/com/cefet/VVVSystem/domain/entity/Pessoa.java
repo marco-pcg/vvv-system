@@ -9,8 +9,9 @@ import java.util.Objects;
 
 @Getter
 @Setter
-@MappedSuperclass
-public abstract class Pessoa {
+@Entity
+@Table(name = "pessoa")
+public class Pessoa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
