@@ -40,6 +40,13 @@ public class TicketService {
         return ticketMapper.toResponseDTO(ticket);
     }
 
+    @Transactional(readOnly = true)
+    public java.util.List<TicketResponseDTO> findAll() {
+        return ticketRepository.findAll().stream()
+                .map(ticketMapper::toResponseDTO)
+                .collect(java.util.stream.Collectors.toList());
+    }
+
     private String gerarNumeroTicket() {
         return "TKT-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
     }

@@ -19,4 +19,10 @@ public class TicketController {
     public ResponseEntity<TicketResponseDTO> consultarTicket(@PathVariable String numero) {
         return ResponseEntity.ok(ticketService.findByNumero(numero));
     }
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'GERENTE', 'FUNCIONARIO')")
+    public ResponseEntity<java.util.List<TicketResponseDTO>> listarTodos() {
+        return ResponseEntity.ok(ticketService.findAll());
+    }
 }
