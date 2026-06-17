@@ -22,10 +22,14 @@ public class MainUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Mapeia as Roles da entidade para SimpleGrantedAuthority (ex: ROLE_ADMIN, ROLE_USER)
-        return user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toList());
+        java.util.Set<GrantedAuthority> authorities = new java.util.HashSet<>();
+        user.getRoles().forEach(role -> {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+            role.getPermissions().forEach(permission -> {
+                authorities.add(new SimpleGrantedAuthority(permission.getName()));
+            });
+        });
+        return authorities;
     }
 
     @Override
