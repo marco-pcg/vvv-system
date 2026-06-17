@@ -73,11 +73,12 @@ public class SecurityConfig {
                                                                                                           // do Swagger
                                                                                                           // liberada
                     .anyRequest().authenticated() // Qualquer outra rota exige autenticação
-            )
-                    .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class); // Injeta nosso filtro
-                                                                                                  // JWT antes do filtro
-                                                                                                  // padrão do Spring
+            );
         }
+
+        // Injeta o filtro JWT antes do filtro padrão, independentemente da permissão ignorada,
+        // pois @PreAuthorize ainda precisará do SecurityContext populado.
+        http.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

@@ -9,6 +9,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import com.cefet.VVVSystem.exception.BusinessException;
+
 @Getter
 @Setter
 @Entity
@@ -67,5 +69,18 @@ public class Viagem {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public void verificarDisponibilidadeCapacidade(long reservasAtivas) {
+        int capacidade = this.modais.stream()
+                .mapToInt(Modal::getCapacidade)
+                .min()
+                .orElseThrow(() -> new BusinessException("A viagem não possui modais alocados."));
+        
+        if (reservasAtivas >= capacidade) {
+            throw new BusinessException(
+                    "Não há mais assentos disponíveis para esta viagem. Capacidade: "
+                            + capacidade + ", reservas ativas: " + reservasAtivas);
+        }
     }
 }

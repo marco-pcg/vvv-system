@@ -40,7 +40,8 @@ public class ReservaService {
      */
     private static final List<StatusReserva> STATUSES_ATIVOS = List.of(
             StatusReserva.PENDENTE,
-            StatusReserva.CONFIRMADA
+            StatusReserva.CONFIRMADA,
+            StatusReserva.AGUARDANDO_APROVACAO
     );
 
     @Transactional
@@ -59,15 +60,7 @@ public class ReservaService {
 
         // 4. Controle de capacidade / Anti-overbooking (RF09/RI04)
         long reservasAtivas = reservaRepository.countByViagemIdAndStatusIn(viagem.getId(), STATUSES_ATIVOS);
-        int capacidade = viagem.getModais().stream()
-                .mapToInt(com.cefet.VVVSystem.domain.entity.Modal::getCapacidade)
-                .min()
-                .orElseThrow(() -> new BusinessException("A viagem não possui modais alocados."));
-        if (reservasAtivas >= capacidade) {
-            throw new BusinessException(
-                    "Não há mais assentos disponíveis para esta viagem. Capacidade: "
-                            + capacidade + ", reservas ativas: " + reservasAtivas);
-        }
+        viagem.verificarDisponibilidadeCapacidade(reservasAtivas);
 
         // 5. Cálculo de desconto (RF15/RI03) — valor final calculado automaticamente
         BigDecimal precoOriginal = viagem.getPreco();

@@ -4,6 +4,9 @@ import com.cefet.VVVSystem.domain.entity.Pagamento;
 import com.cefet.VVVSystem.domain.entity.PagamentoCredito;
 import com.cefet.VVVSystem.domain.enums.TipoPagamento;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class PagamentoDebitoStrategy implements PagamentoStrategy {
     
     @Override

@@ -6,6 +6,9 @@ import com.cefet.VVVSystem.domain.enums.TipoPagamento;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class PagamentoCreditoStrategy implements PagamentoStrategy {
     
     @Override

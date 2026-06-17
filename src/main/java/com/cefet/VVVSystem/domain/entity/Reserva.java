@@ -55,6 +55,9 @@ public class Reserva {
     @Column(name = "valor_total", nullable = false, precision = 10, scale = 2)
     private BigDecimal valorTotal;
 
+    @Column(name = "integrado_transportadora", nullable = false)
+    private Boolean integradoTransportadora = false;
+
     @Override
     public boolean equals(Object o) {
         if (this == o)

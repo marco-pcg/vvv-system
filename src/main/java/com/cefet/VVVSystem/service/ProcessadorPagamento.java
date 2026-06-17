@@ -21,7 +21,7 @@ public class ProcessadorPagamento {
         this.estrategias = estrategias;
     }
 
-    public void processarERegistrarPagamento(Reserva reserva, Pagamento pagamento) {
+    public void processarERegistrarPagamento(Reserva reserva, Pagamento pagamento, StatusReserva statusSucesso) {
         // Convert entity string suffix to your matching TipoPagamento enum instance
         String suffix = pagamento.getClass().getSimpleName()
                                 .replace("Pagamento", "")
@@ -42,11 +42,16 @@ public class ProcessadorPagamento {
             pagamento.setReserva(reserva); // FK lives on Pagamento side (pagamento.id_reserva)
 
             // 4. Atualizar status da reserva
-            reserva.setStatus(StatusReserva.CONFIRMADA); // Updates your reservation state machine
-            System.out.println("Reservation " + reserva.getId() + " successfully confirmed via Strategy!");
+            reserva.setStatus(statusSucesso); // Updates your reservation state machine
+            System.out.println("Reservation " + reserva.getId() + " successfully confirmed via Strategy! Status: " + statusSucesso);
         } else {
             pagamento.setStatus(StatusPagamento.RECUSADO);
             reserva.setStatus(StatusReserva.PENDENTE);
         }
+    }
+
+    // Método mantido para compatibilidade com códigos existentes
+    public void processarERegistrarPagamento(Reserva reserva, Pagamento pagamento) {
+        processarERegistrarPagamento(reserva, pagamento, StatusReserva.CONFIRMADA);
     }
 }
