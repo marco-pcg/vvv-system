@@ -31,4 +31,17 @@ public class GerenciamentoVendasService {
 
         return ticketService.emitirTicket(reserva);
     }
+
+    @Transactional
+    public void rejeitarVendaOnline(Long reservaId) {
+        Reserva reserva = reservaRepository.findById(reservaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Reserva não encontrada."));
+
+        if (reserva.getStatus() != StatusReserva.AGUARDANDO_APROVACAO) {
+            throw new BusinessException("A reserva não está aguardando aprovação. Status atual: " + reserva.getStatus());
+        }
+
+        reserva.setStatus(StatusReserva.CANCELADA);
+        reservaRepository.save(reserva);
+    }
 }

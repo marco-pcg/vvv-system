@@ -8,6 +8,7 @@ export interface Cliente {
   telefone?: string
   cep?: string
   dataNascimento?: string
+  roles?: string[]
 }
 
 interface AuthContextType {
@@ -38,20 +39,54 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const fetchProfile = async (authToken: string, throwOnError = false) => {
     try {
-      const res = await fetch('/api/clientes/me', {
+      const authMeRes = await fetch('/auth/me', {
         headers: {
           'Authorization': `Bearer ${authToken}`,
         },
       })
-      if (res.ok) {
-        const data = await res.json()
-        setUser(data)
-        localStorage.setItem('userName', data.nome)
-      } else {
+      if (!authMeRes.ok) {
         logout()
         if (throwOnError) {
-          throw new Error('Não foi possível carregar os dados de perfil do cliente.')
+          throw new Error('Falha ao autenticar usuário.')
         }
+        return
+      }
+
+      const authMeData = await authMeRes.json()
+      const authUser = authMeData.data // { id: 1, username: 'gerente', roles: ['ROLE_GERENTE'] }
+      const isCliente = authUser.roles.includes('ROLE_CLIENTE')
+
+      if (isCliente) {
+        const res = await fetch('/api/clientes/me', {
+          headers: {
+            'Authorization': `Bearer ${authToken}`,
+          },
+        })
+        if (res.ok) {
+          const data = await res.json()
+          const clientData: Cliente = {
+            ...data,
+            roles: authUser.roles
+          }
+          setUser(clientData)
+          localStorage.setItem('userName', clientData.nome)
+        } else {
+          logout()
+          if (throwOnError) {
+            throw new Error('Não foi possível carregar os dados de perfil do cliente.')
+          }
+        }
+      } else {
+        // Para administradores, gerentes ou outros funcionários sem tabela 'cliente'
+        const mockUser: Cliente = {
+          id: authUser.id,
+          nome: authUser.username.charAt(0).toUpperCase() + authUser.username.slice(1),
+          cpf: '',
+          email: '',
+          roles: authUser.roles
+        }
+        setUser(mockUser)
+        localStorage.setItem('userName', mockUser.nome)
       }
     } catch (err) {
       console.error('Erro ao buscar perfil do usuário:', err)

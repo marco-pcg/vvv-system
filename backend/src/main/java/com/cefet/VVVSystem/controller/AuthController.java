@@ -143,4 +143,22 @@ public class AuthController {
 
         return ApiResponse.success("Senha alterada com sucesso", null);
     }
+
+    @org.springframework.web.bind.annotation.GetMapping("/me")
+    @org.springframework.security.access.prepost.PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiResponse<java.util.Map<String, Object>>> getAuthMe() {
+        Authentication auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        com.cefet.VVVSystem.security.MainUser mainUser = (com.cefet.VVVSystem.security.MainUser) auth.getPrincipal();
+        User user = mainUser.getUser();
+
+        java.util.List<String> roles = user.getRoles().stream()
+                .map(role -> role.getName())
+                .collect(java.util.stream.Collectors.toList());
+
+        return ApiResponse.success("Dados do usuário recuperados", java.util.Map.of(
+                "id", user.getId(),
+                "username", user.getUsername(),
+                "roles", roles
+        ));
+    }
 }

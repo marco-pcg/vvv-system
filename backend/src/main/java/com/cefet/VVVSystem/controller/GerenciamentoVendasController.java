@@ -32,4 +32,11 @@ public class GerenciamentoVendasController {
                     "reservaCodigo", ticket.getReserva().getCodigo()
                 ));
     }
+
+    @PutMapping("/{reservaId}/rejeitar")
+    @PreAuthorize("hasAuthority(T(com.cefet.VVVSystem.security.RoleConstants).PERM_RESERVA_ONLINE_REJECT)")
+    public ResponseEntity<ApiResponse<Void>> rejeitarVenda(@PathVariable Long reservaId) {
+        gerenciamentoVendasService.rejeitarVendaOnline(reservaId);
+        return ApiResponse.success("Venda rejeitada com sucesso.", null);
+    }
 }

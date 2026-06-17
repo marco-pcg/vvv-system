@@ -8,6 +8,7 @@ export function Navbar() {
   const { user, isAuthenticated, logout } = useAuth()
   const navigate = useNavigate()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const isGerente = user?.roles?.includes('ROLE_GERENTE') || user?.roles?.includes('ROLE_ADMIN')
 
   const handleLogout = () => {
     logout()
@@ -49,6 +50,11 @@ export function Navbar() {
 
             {isAuthenticated ? (
               <>
+                {isGerente && (
+                  <Link to="/dashboard/aprovacoes" className="text-accent-500 hover:text-accent-600 font-semibold text-sm py-2 px-3 bg-orange-50 border border-orange-100 rounded-xl transition-colors flex items-center gap-1">
+                    Painel de Aprovações
+                  </Link>
+                )}
                 <Link to="/dashboard/reservas" className="text-text-secondary hover:text-primary-500 font-medium transition-colors text-sm py-2">
                   Minhas Reservas
                 </Link>
@@ -126,6 +132,15 @@ export function Navbar() {
 
             {isAuthenticated ? (
               <>
+                {isGerente && (
+                  <Link
+                    to="/dashboard/aprovacoes"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-3 py-2.5 rounded-xl text-base font-bold text-accent-500 bg-orange-50 border border-orange-100 transition-colors"
+                  >
+                    Painel de Aprovações
+                  </Link>
+                )}
                 <Link
                   to="/dashboard/reservas"
                   onClick={() => setMobileMenuOpen(false)}

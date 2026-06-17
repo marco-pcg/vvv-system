@@ -3,6 +3,7 @@ import { Home } from './pages/Home'
 import { BuscaViagens } from './pages/BuscaViagens'
 import { DashboardReservas } from './pages/dashboard/DashboardReservas'
 import { Perfil } from './pages/dashboard/Perfil'
+import { DashboardAprovacoes } from './pages/dashboard/DashboardAprovacoes'
 import { Login } from './pages/Login'
 import { Register } from './pages/Register'
 import { ForgotPassword } from './pages/ForgotPassword'
@@ -36,6 +37,7 @@ function MainAppRoutes() {
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route path="reservas" element={<DashboardReservas />} />
           <Route path="perfil" element={<Perfil />} />
+          <Route path="aprovacoes" element={<DashboardAprovacoes />} />
         </Route>
       </Routes>
     </BrowserRouter>

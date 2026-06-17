@@ -68,6 +68,30 @@ public class TicketService {
                 .collect(java.util.stream.Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public TicketResponseDTO findByReservaId(Long reservaId) {
+        Ticket ticket = ticketRepository.findByReservaId(reservaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket não encontrado para esta reserva."));
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            boolean isAdminOrFuncionario = auth.getAuthorities().stream()
+                    .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")
+                            || a.getAuthority().equals("ROLE_GERENTE")
+                            || a.getAuthority().equals("ROLE_FUNCIONARIO"));
+
+            if (!isAdminOrFuncionario) {
+                String currentUsername = auth.getName();
+                User donoUser = ticket.getReserva().getCliente().getUser();
+                if (donoUser == null || !currentUsername.equals(donoUser.getUsername())) {
+                    throw new AccessDeniedException("Acesso negado: O ticket pertence a outro usuário.");
+                }
+            }
+        }
+
+        return ticketMapper.toResponseDTO(ticket);
+    }
+
     private String gerarNumeroTicket() {
         return "TKT-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
     }

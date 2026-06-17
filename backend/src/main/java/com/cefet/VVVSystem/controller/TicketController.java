@@ -25,4 +25,10 @@ public class TicketController {
     public ResponseEntity<java.util.List<TicketResponseDTO>> listarTodos() {
         return ResponseEntity.ok(ticketService.findAll());
     }
+
+    @GetMapping("/reserva/{reservaId}")
+    @PreAuthorize("hasAnyAuthority(T(com.cefet.VVVSystem.security.RoleConstants).PERM_RESERVA_READ, T(com.cefet.VVVSystem.security.RoleConstants).PERM_RESERVA_SELF_MANAGE, T(com.cefet.VVVSystem.security.RoleConstants).PERM_RESERVA_MANAGE_ALL)")
+    public ResponseEntity<TicketResponseDTO> consultarPorReserva(@PathVariable Long reservaId) {
+        return ResponseEntity.ok(ticketService.findByReservaId(reservaId));
+    }
 }
