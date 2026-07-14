@@ -1,11 +1,11 @@
-docker compose down -v
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host " Iniciando VVV System (Backend + Front) " -ForegroundColor Cyan
+Write-Host "========================================" -ForegroundColor Cyan
 
-docker compose up -d --build
+Write-Host "Iniciando Backend (e Docker) em uma nova janela..." -ForegroundColor Yellow
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd backend; .\start.ps1"
 
-./mvnw dependency:purge-local-repository clean test-compile
+Write-Host "Iniciando Frontend em uma nova janela..." -ForegroundColor Yellow
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd frontend; npm run dev"
 
-./mvnw compile
-
-./mvnw spring-boot:run
-
-./mvnw clean test
+Write-Host "Servicos iniciados! Feche as janelas para parar os servidores." -ForegroundColor Green

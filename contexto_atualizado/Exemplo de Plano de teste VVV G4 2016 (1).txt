@@ -1,188 +1,0 @@
-Plano de Testes
-
-
-
-
-
-Projeto: Sistema Vai & Volta Viagens
-
-Versão: 1.0
-
-
-
-
-
-
-
-Grupo 4: 
-Annanda Sousa
-Rodrigo Zhou
-Thales Nathan
- 
-Histórico de Revisões
-DataVersãoDescriçãoAutor12/01/2016<1.0>Release InicialGrupo 4
-Índice
-
-1.	INTRODUÇÃO	4
-1.1	OBJETIVOS	4
-1.2	Vai & Volta Viagens	4
-1.3	ESCOPO	4
-2.	REQUISITOS A TESTAR	6
-2.1	TESTE DO BANCO DE DADOS	5
-2.2	TESTE FUNCIONAL	5
-2.3	TESTE DO CICLO DE NEGÓCIOS	5
-2.4	TESTE DA INTERFACE DO USUÁRIO	5
-2.5	PERFIL DA PERFORMANCE	5
-2.6	TESTE DE CARGA	5
-2.7	TESTE DE STRESS	5
-2.8	TESTE DE SEGURANÇA E DE CONTROLE DE ACESSO	6
-2.9	TESTE DE FALHA/RECUPERAÇÃO	6
-2.10	TESTE DE INSTALAÇÃO	6
-3.	ESTRATÉGIA DE TESTE	7
-3.1	TIPOS DE TESTE	7
-3.1.1	Teste de Integridade de Dados e do Banco de Dados	8
-3.1.2	Teste de Função	8
-3.1.3	Teste da Interface do Usuário	8
-3.1.4	Teste de Segurança e Controle de Acesso	9
-3.1.5	Teste de Instalação	9
-3.2	FERRAMENTAS	9
-4.	Cronograma	10
-
-1. Introdução
-1.1 Objetivos
-O documento do Plano de Testes do sistema Vai & Volta Viagens  tem como objetivo listar os Requisitos que serão testados recomendando e descrevendo as estratégias a serem empregadas nesses testes. Este documento também identifica os recursos necessários e disponibiliza uma estimativa dos esforços de teste.
-1.2 O Sistema de VVV 
-
-É uma agência que comercializa viagens nacionais e internacionais. Através da VVV o cliente pode reservar pacotes de viagens e mediante a confirmação do pagamento, são emitidos tickets para os diferentes percursos da viagem. 
-A Agência VVV ainda não reserva pacotes pela internet, então a solução de sistema será implementada nas máquinas dos quiosques da VVV. 
-O funcionário precisa de um login e senha para se logar no sistema e assim executar todas as funcionalidades que a VVV tem disponível. 
-1.3 Escopo
-O VVV deverá ser submetido a testes de unidade, integração e aceitação.
-Os testes de unidade avaliarão isoladamente o banco de dados, a interface gráfica, e todos os outros componentes do projeto.
-Os testes de integração testa os componentes, previamente testados isoladamente,  acoplados. O objetivo é identificar possíveis falhas nos acoplamentos.
-Os testes de aceitação apresentarão o produto final para o usuário para validação e últimos ajustes. 
-Os testes de sistema avaliarão o funcionamento e o desempenho do sistema como um todo, verificando a eficácia e segurança, além da compatibilidade e integração do software no ambientes das máquinas da VVV.
-Para realizar os testes serão utilizadas máquinas com as configurações mais próximas o possível das máquinas que serão utilizadas pelo usuário final, tentando assim, simular o ambiente final em que o programa será executado.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-2. REQUISITOS A TESTAR
-2.1 Teste do Banco de Dados
-
-* Verificar se as informações sobre usuários, viagens, percursos, reservas, modais e cidades podem ser inseridas ou modificadas do Banco de Dados
-* Verificar se as informações obtidas no Banco de Dados consistem com as informações reais sobre usuários, viagens, percursos, reservas, modais e cidades.
-* Verificar se as informações cadastradas podem ser consultadas.
-2.2 Teste Funcional
-* Verificar se qualquer usuário cadastrado possa acessar o sistema através de um Login e Senha.
-2.3 Teste do Ciclo de Negócios
-* Verificar se os valores de pagamento da reserva estão sendo corretamente calculados.
-* Verificar se é obrigatório um viajante menor de idade estar acompanhando de algum responsável.
-* Verificar se o tratamento de exceções está correto.
-* Verificar se os campos obrigatórios estão sendo preenchidos em cada formulário.
-* Verificar se os campos estão sendo preenchidos com informações no formato correto em cada formulário.
-2.4 Teste da Interface do Usuário
-* Verificar se cada tela de interface gráfica pode ser facilmente entendida e utilizada.
-* Verificar se os formulários de cadastro e edição estão pegando os dados inseridos pelo usuário corretamente.
-* Verificar se todos os links e/ou botões estão funcionando corretamente.
-* Verificar se a navegação entre as telas está correta. 
-2.5 Perfil da Performance
-* Verifique o tempo de resposta de consultar/inserção/edição no banco de dados.
-* Verifique o tempo de resposta da troca de informações entre servidor e terminal.
-
-2.6 Teste de Carga
-Nenhum.
-2.7 Teste de Stress
-Não será feito, pois só um usuário vai acessar o sistema por vez, então não cabe esse teste. 
-2.8 Teste de Segurança e de Controle de Acesso
-* Verificar se apenas usuários cadastrados podem acessar informações e funcionalidades do sistema.
-* Verificar se o funcionário tem acesso a cadastrar/editar/remover e consultar viagens, percursos, modais, cidades, usuários e reservas.
-2.9 Teste de Falha/Recuperação
-Nenhum.
-2.10 Teste de Instalação
-* Verifique que a instalação do sistema ocorre normalmente em todas as máquinas que possuam os requisitos mínimos.
-3. Estratégia de Teste
-3.1 Tipos de Teste
-3.1.1 Teste de Integridade de Dados e do Banco de Dados
-
-Objetivo do Teste:Garantir que o acesso ao banco de dados funciona adequadamente e sem inconsistência dos dados.Técnica:* Invocar cada método de acesso ao banco de dados, alimentando cada um com dados válidos e inválidos. 
-* Inspecionar o banco de dados e verificar se os dados nas tabelas estão de acordo com as ações realizadasCritério de Finalização:Todos os métodos e processos de acesso à base de dados funcionam como projetados e sem nenhuma corrupção de dados.Considerações Especiais:* O teste necessitam de um ambiente de desenvolvimento e driver de SGBD para inserir ou modificar os dados diretamente na base de dados, vamos utilizar o mysql-conector-java5.1.38
-* Processos devem ser invocados manualmente
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-3.1.2 Teste de Função
-
-Objetivo do Teste:Garantir que as funcionalidades do sistema, especificadas nos casos de usos,  estão gerando os resultados esperados.Técnica:Executar cada caso de uso funcional, executando de todos os fluxo gerados através do grafo de fluxo de teste, usando dados válidos e inválidos, para verificar o seguinte:
-* Os resultados esperados ocorrem quando dados válidos são usados.
-* As mensagens de erro ou aviso apropriadas são exibidas quando dados inválidos são usados.
-* Cada regra de negócio é aplicada apropriadamente.Critério de Finalização:* Todos os testes planejados foram executados.
-* Todos os defeitos identificados foram tratados.Considerações Especiais:Nenhum
-3.1.3 Teste da Interface do Usuário
-
-Objetivo do Teste:* Verificar se a navegação através dos alvos de teste reflete as funções e os requisitos do negócio apropriadamente.
-* Objetos e características da janela, tais como menus, tamanho, posição, estado e foco conformam-se aos padrões.Técnica:* Criar ou modificar os testes para cada janela para verificar a navegação e os estados de objeto apropriados para cada janela e objetos da aplicação.Critério de Finalização:* É verificado que cada janela permanece consistente com a versão de comparação ou dentro de padrões aceitáveis.
-* É verificado que o usuário consegue usar a interface sem precisar de treinamento e a considera agradável.
-
-
-
-
-
-
-
-
-3.1.4 Teste de Segurança e Controle de Acesso
-
-Objetivo do Teste:Verificar que apenas aqueles usuários com acesso ao sistema e aplicações têm permissão de acessá-los. Técnica:* Segurança do Nível de Aplicação: Identifique e liste cada tipo de usuário e as funções ou dados para os quais cada tipo tem permissão.Critério de Finalização:Para cada tipo de ator conhecido as funções ou dados apropriados estão disponíveis, e todas as transações funcionam como esperado e rodam nos Testes de Função anteriores.
-3.1.5  Teste de Instalação
-
-Objetivo do Teste:Verifique que os alvos de teste instalam apropriadamente em cada configuração de hardware necessária sobre as seguintes condições:
-* Uma nova instalação, em uma nova máquina, que nunca fora anteriormente instalada.Técnica:Começar ou executar a instalação.Critério de Finalização:As transações do software executam de forma bem sucedida, sem falha.3.2 Ferramentas
-As seguintes ferramentas serão empregadas para esse projeto:
-
-FerramentaGerenciamento de TesteJ-UnityProjeto de TesteMicrosoft ExcelGerenciamento de ProjetoMicrosoft WordFerramentas do SGBD MySQL Workbench 
-4. Cronograma
-ATIVIDADEInícioFinalPlanejamento de Testes03/01/201612/01/2016Projetar Testes10/01/201612/01/2016Implementar Testes10/01/201612/01/2016Execução de Testes11/01/201601/02/2016Avaliação de Testes01/02/201610/02/2016
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

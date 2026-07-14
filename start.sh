@@ -1,11 +1,28 @@
-docker compose down -v
+#!/bin/bash
 
-docker compose up -d --build
+echo "========================================"
+echo " Iniciando VVV System (Backend + Front) "
+echo "========================================"
 
-./mvnw dependency:purge-local-repository clean test-compile
+# Funcao para matar os processos ao sair
+cleanup() {
+    echo "Encerrando servicos..."
+    kill 0
+}
 
-./mvnw compile
+# Trap catch Ctrl+C
+trap cleanup SIGINT SIGTERM
 
-./mvnw spring-boot:run
+echo "Iniciando Backend (Spring Boot e Docker)..."
+cd backend
+chmod +x start.sh
+./start.sh &
+cd ..
 
-./mvnw clean test
+echo "Iniciando Frontend (Vite/React)..."
+cd frontend
+npm run dev &
+cd ..
+
+echo "Servicos rodando em background. Pressione [CTRL+C] para encerrar."
+wait
